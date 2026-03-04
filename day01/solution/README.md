@@ -27,105 +27,48 @@ make clean
 
 ## Answers
 
-**Q1: What are the 4 stages of the GCC compilation pipeline?**  
-*Hint: see notes.md -> Section 1*
+**Q1: Your project has `main.c`, `util.c`, and `util.h`. You run `gcc main.c -o app` and get `undefined reference to util_reverse_string`. Explain precisely why the linker fails, and write the minimal corrected command.**  
 
 > Your answer here...
 
 ---
 
-**Q2: You compiled `main.c` successfully, but linker reports `undefined reference to util_reverse_string`. What is the most likely cause?**  
-*Hint: see notes.md -> Section 1*
+**Q2: A header `config.h` is included by both `main.c` and `util.c`. Without include guards, what specific error occurs during compilation, and exactly which pipeline stage produces it?**  
 
 > Your answer here...
 
 ---
 
-**Q3: What command runs only preprocessing for `main.c` so you can inspect expanded includes/macros?**  
-*Hint: see notes.md -> Section 1*
+**Q3: What content belongs in `util.h` and what must stay in `util.c`? Give one concrete example of content that, if placed in the header, causes a multiple-definition link error when `main.c` and `tests.c` both include it.**  
 
 > Your answer here...
 
 ---
 
-**Q4: What should go into `util.h`, and what should usually stay out of headers?**  
-*Hint: see notes.md -> Section 2*
+**Q4: `-Wall` is enabled, but the compiler does not warn about a variable shadowed in an inner block. Name the additional flag that catches this, and explain why the compiler considers shadowing a noteworthy hazard.**  
 
 > Your answer here...
 
 ---
 
-**Q5: Why do include guards prevent multiple definition/redefinition problems?**  
-*Hint: see notes.md -> Section 2*
+**Q5: A colleague builds with `-O2 -g` and insists the debug info is "just as useful" as `-O0 -g`. Describe two specific ways that `-O2` makes source-level debugging unreliable, and name the optimizations responsible.**  
 
 > Your answer here...
 
 ---
 
-**Q6: How is `#include <stdio.h>` different from `#include "util.h"` in header search behavior?**  
-*Hint: see notes.md -> Section 2*
+**Q6: In Make, a file named `test` is accidentally created in the build directory. Without `.PHONY: test`, what does `make test` do now, and how does declaring it `.PHONY` fix this?**  
 
 > Your answer here...
 
 ---
 
-**Q7: What is the practical difference between `-Wall` and `-Wextra`, and why is `-Wall` not enough alone?**  
-*Hint: see notes.md -> Section 3*
+**Q7: You run your test suite under ASan and find a heap-buffer-overflow. You then want to check for leaks with Valgrind. Why can you not simply run Valgrind on the same ASan-instrumented binary, and what is the correct workflow?**  
 
 > Your answer here...
 
 ---
 
-**Q8: Which flag turns warnings into build failures, and why is that useful in daily practice?**  
-*Hint: see notes.md -> Section 3*
-
-> Your answer here...
-
----
-
-**Q9: You suspect a variable is accidentally shadowed in an inner scope. Which warning flag should you add?**  
-*Hint: see notes.md -> Section 3*
-
-> Your answer here...
-
----
-
-**Q10: What information does `-g` add to a binary, and how does GDB use it?**  
-*Hint: see notes.md -> Section 4*
-
-> Your answer here...
-
----
-
-**Q11: Why is `-O0 -g` preferred for debugging over `-O2 -g`?**  
-*Hint: see notes.md -> Section 4*
-
-> Your answer here...
-
----
-
-**Q12: In a Make rule, what do `$@`, `$^`, and `$<` expand to?**  
-*Hint: see notes.md -> Section 5*
-
-> Your answer here...
-
----
-
-**Q13: Why should targets like `test` and `clean` be listed under `.PHONY`?**  
-*Hint: see notes.md -> Section 5*
-
-> Your answer here...
-
----
-
-**Q14: What kinds of memory bugs does AddressSanitizer catch, and what flag must be present at both compile and link time?**  
-*Hint: see notes.md -> Section 6*
-
-> Your answer here...
-
----
-
-**Q15: Why should Valgrind Memcheck be run on a non-ASan debug build, and which leak category is the strongest fix-now signal?**  
-*Hint: see notes.md -> Section 7*
+**Q8: GDB reports a crash inside `util_reverse_string` but the source line shown is incorrect. What build-time mistake caused this mismatch, and what must you do before relaunching GDB?**  
 
 > Your answer here...

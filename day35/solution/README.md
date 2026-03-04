@@ -13,34 +13,50 @@ make clean
 
 ## Answers
 
-1. Why do C callback APIs almost always include a `void* ctx` or `void* userdata` parameter?  
-   *Hint: C lacks captured lambdas; context pointer carries caller state.*  
-   > TODO: write your answer here.
+**Q1: A callback registered with `void *ctx = &local_var` where `local_var` is a stack variable in `main`. The callback is fired after `main` returns `local_var` to a different scope. Describe the resulting bug and how `void *ctx` ownership should be documented or enforced.**  
 
-2. What happens if a while-loop checks a global boolean flag that is NOT marked volatile, but is changed by an interrupt?  
-   *Hint: compiler may optimize repeated reads and miss external updates.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What specific guarantee does `sig_atomic_t` provide?  
-   *Hint: think atomic read/write behavior for signal-safe scalar access.*  
-   > TODO: write your answer here.
+---
 
-4. What is the Observer pattern and how does the dispatcher implement it?  
-   *Hint: publisher notifies registered subscribers without direct coupling.*  
-   > TODO: write your answer here.
+**Q2: Explain exactly why the compiler is allowed to eliminate the loop condition `while (!g_exit_requested)` when `g_exit_requested` is a plain `int` not marked `volatile`. Name the C standard clause that permits this optimisation.**  
 
-5. Why can't you safely call `printf` or `malloc` inside a real hardware ISR?  
-   *Hint: ISR context has strict timing and async-signal-safety constraints.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should dispatcher registration guard against exceeding maximum slots?  
-   *Hint: fixed arrays need bounds protection to avoid memory corruption.*  
-   > TODO: write your answer here.
+---
 
-7. What bug appears if dispatcher invokes callbacks without checking event ID match?  
-   *Hint: unrelated handlers may execute and corrupt application state.*  
-   > TODO: write your answer here.
+**Q3: `volatile sig_atomic_t` is used for the exit flag in this day, but Day 32 used `_Atomic` for shared indexes. Under what condition would `volatile sig_atomic_t` be *insufficient* and `_Atomic` *necessary*? When is the reverse true?**  
 
-8. Why is synchronous event dispatch often enough in small embedded loops?  
-   *Hint: deterministic order and low overhead can simplify design.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: `dispatch_fire_event` iterates all registered slots and calls every handler whose `event_id` matches. A callback registered inside that iteration (re-entrant registration) could cause subtle bugs. Describe two specific failure scenarios and propose a defensive design.**  
+
+> Your answer here...
+
+---
+
+**Q5: The ISR-safe UART receive pattern uses a ring buffer push inside the ISR and a ring buffer pop in the main loop. Describe, step by step, the race that occurs if both `rb_push` and `rb_pop` run concurrently on a non-atomic ring buffer, and explain which of the two mitigation strategies from Day 34 applies here.**  
+
+> Your answer here...
+
+---
+
+**Q6: A developer wants to call `printf` inside a signal handler to log which signal fired. Explain why this is unsafe in terms of reentrancy and the POSIX async-signal-safety list. What is the correct pattern for logging from an ISR-like context?**  
+
+> Your answer here...
+
+---
+
+**Q7: The `dispatch_register` function stores both a `handler` function pointer and a `ctx` pointer. If the dispatcher is used across a thread boundary (one thread fires events, another registers handlers), what synchronisation is required and why is no synchronisation still wrong even if the thread schedules perfectly?**  
+
+> Your answer here...
+
+---
+
+**Q8: Reflect on the full 35-day arc. You implemented: string manipulation, dynamic arrays, hash maps, a CLI tool, I/O pipelines, threads, lock-free queues, memory pools, FSMs, ring buffers, and event dispatchers. Identify one design pattern or low-level mechanism that appeared in more than three days in different forms, and explain the common underlying principle.**  
+
+> Your answer here...
+
+---

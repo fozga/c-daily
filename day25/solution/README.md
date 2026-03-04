@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. Why must you read `errno` immediately after the failing call?  
-   *Hint: later library calls can overwrite thread-local errno state.*  
-   > TODO: write your answer here.
+**Q1: `diag_open_file` calls `fopen`, then `fprintf` to print the error. Why must `errno` be saved into a local variable before the `fprintf` call?**
 
-2. What is the difference between `perror` and `strerror`?  
-   *Hint: one prints directly with prefix, the other returns text string.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. If 3 files are processed and 1 fails to open, should the tool exit 0 or 1?  
-   *Hint: partial failure should be reflected in final status.*  
-   > TODO: write your answer here.
+---
 
-4. What exit code does real POSIX grep use when no lines are matched?  
-   *Hint: it is non-zero but not usage-error tier.*  
-   > TODO: write your answer here.
+**Q2: `perror("mini-grep")` produces `mini-grep: No such file or directory` for a missing file, but mini-grep's spec requires `mini-grep: foo.txt: No such file or directory`. Why doesn't `perror` satisfy the spec, and what does `diag_open_file` use instead?**
 
-5. What format should diagnostic messages follow for good UX?  
-   *Hint: include program name, context, and reason text.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should diagnostics be printed to stderr, not stdout?  
-   *Hint: preserve clean match output for pipelines and file redirection.*  
-   > TODO: write your answer here.
+---
 
-7. Why continue processing remaining files after one open failure?  
-   *Hint: maximize useful output from valid inputs in Unix tool style.*  
-   > TODO: write your answer here.
+**Q3: mini-grep processes `a.txt` (matches found), `b.txt` (cannot open), and `c.txt` (no matches). What is the correct final exit code, and which row of the exit-code table applies?**
 
-8. Why distinguish "only errors" from "no matches but no errors" in exit-code design?  
-   *Hint: scripts may react differently to semantic no-match vs operational failure.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: A shell script runs `mini-grep "TODO" src/*.c; if [ $? -eq 1 ]; then echo "No TODOs found"; fi`. Under what two distinct conditions will mini-grep exit `1`, and could the script misinterpret one of them?**
+
+> Your answer here...
+
+---
+
+**Q5: mini-grep processes five files but exits before finishing the third because the programmer wrote `exit(2)` inside `diag_open_file`. What Unix tool principle does this violate, and how should it be fixed?**
+
+> Your answer here...
+
+---
+
+**Q6: A user runs `mini-grep "err" app.log 2>/dev/null | head -5`. If diagnostic messages were sent to stdout instead of stderr, what would the pipeline output contain that the user didn't want?**
+
+> Your answer here...
+
+---
+
+**Q7: `main.c` tracks two boolean flags: `any_match` and `any_error`. Why is a single `exit_code` integer insufficient to correctly implement the four-scenario exit mapping?**
+
+> Your answer here...
+
+---
+
+**Q8: POSIX grep exits `2` for an error. mini-grep exits `2` only when ALL files fail and there are no matches. What is the practical difference for a script that wants to distinguish "nothing matched" from "something went wrong"?**
+
+> Your answer here...
+
+---

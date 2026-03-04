@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. Why are `qsort` comparator params `const void*` instead of typed pointers?  
-   *Hint: think about generic algorithms operating on arbitrary element types.*  
-   > TODO: write your answer here.
+**Q1: Why does `qsort` accept `const void*` comparator arguments instead of typed pointers, and what responsibility does that place on the comparator author?**  
 
-2. Why is `return a - b` as a comparator dangerous for signed integers?  
-   *Hint: consider overflow rules for signed arithmetic in C.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What happens if you call `bsearch` on an unsorted array?  
-   *Hint: binary search depends on a monotonic ordering invariant.*  
-   > TODO: write your answer here.
+---
 
-4. How do you sort an array of structs by a string field?  
-   *Hint: compare `char[]` fields with `strcmp` in a comparator callback.*  
-   > TODO: write your answer here.
+**Q2: A comparator is written as `return *(int*)a - *(int*)b`. Under what inputs does this produce wrong results, and why is signed overflow the root cause?**  
 
-5. Why is `qsort` not guaranteed to be stable?  
-   *Hint: the C standard specifies ordering correctness, not equal-element order preservation.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. What comparator properties must hold for `qsort` and `bsearch` to behave correctly?  
-   *Hint: think transitivity, consistent equality handling, and total ordering expectations.*  
-   > TODO: write your answer here.
+---
 
-7. How should you safely compare two `int32_t` values in a comparator without overflow risk?  
-   *Hint: use relational checks to return -1/0/1 rather than arithmetic subtraction.*  
-   > TODO: write your answer here.
+**Q3: What is the algorithmic consequence of calling `bsearch` on an array that was never sorted, and why can it silently return wrong results rather than always returning NULL?**  
 
-8. Why must the same logical ordering be used for both `qsort` and `bsearch`?  
-   *Hint: search correctness relies on exactly the ordering used to sort the array.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: How would you implement a comparator that sorts an array of structs first by a string field, then breaks ties by a numeric field?**  
+
+> Your answer here...
+
+---
+
+**Q5: Why is `qsort` not guaranteed to be stable, and in what real-world scenario would instability visibly corrupt a multi-pass sorting strategy?**  
+
+> Your answer here...
+
+---
+
+**Q6: List the three mathematical properties a valid total-order comparator must satisfy. For each one, describe a concrete bug that arises when it is violated.**  
+
+> Your answer here...
+
+---
+
+**Q7: After calling `qsort` to sort records by `id`, you then call `qsort` again to sort by `name`. Is it now safe to call `bsearch` with the `cmp_by_id` comparator? Explain why or why not.**  
+
+> Your answer here...
+
+---
+
+**Q8: How would you store a comparator function pointer inside a struct so that different instances of a "sorter" object can use different orderings at runtime?**  
+
+> Your answer here...
+
+---

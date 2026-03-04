@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. Why should you always use `"rb"` and `"wb"` for binary files?  
-   *Hint: think about platform-specific text-mode transformations.*  
-   > TODO: write your answer here.
+**Q1: On Linux, opening a file in text mode (`"w"`) vs binary mode (`"wb"`) produces the same bytes. Why is it still important to always use `"rb"`/`"wb"` for binary files?**  
 
-2. What does `fread` return if the file ends mid-record?  
-   *Hint: return value counts full items, not partial bytes.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. Why is using `int` as a binary format field a portability bug?  
-   *Hint: size and representation of `int` vary by ABI/platform.*  
-   > TODO: write your answer here.
+---
 
-4. What are "magic bytes" and why are they useful?  
-   *Hint: they identify expected file type before parsing payload.*  
-   > TODO: write your answer here.
+**Q2: `fread(&hdr, sizeof hdr, 1, fp)` returns `0` on the very first read of a newly created file. Walk through the decision tree: what do `feof` and `ferror` each tell you, and which return code should you give the caller?**  
 
-5. How do you detect endianness at runtime in C?  
-   *Hint: inspect byte order of a known multi-byte integer value.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should unknown binary format versions be rejected?  
-   *Hint: unsupported layouts can be misinterpreted silently.*  
-   > TODO: write your answer here.
+---
 
-7. What is the difference between `feof` and `ferror` after short reads?  
-   *Hint: distinguish expected stream end from actual I/O failure.*  
-   > TODO: write your answer here.
+**Q3: A struct contains `int count` and is written to disk with `fwrite`. Six months later the codebase is ported to a 64-bit embedded target where `int` is 16 bits. What exactly breaks, and how would `uint32_t` have prevented it?**  
 
-8. Why are fixed-width types (`uint32_t`, `int32_t`) critical in binary layouts?  
-   *Hint: deterministic on-disk field width is mandatory for compatibility.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Describe a concrete attack or data-corruption scenario that magic-byte validation prevents. What additional protection does version validation add on top of magic validation?**  
+
+> Your answer here...
+
+---
+
+**Q5: Write a short C snippet that detects at runtime whether the host system is little-endian or big-endian. Explain how it works at the byte level.**  
+
+> Your answer here...
+
+---
+
+**Q6: A file header declares `rec_count = 1000000` but the file is only 512 bytes. Why is checking `rec_count` against a sane upper bound before calling `fread` essential, even though `fread` will simply short-return?**  
+
+> Your answer here...
+
+---
+
+**Q7: You call `fread(buf, rec_size, n, fp)` and it returns `n-2`. How do you determine whether the two missing records were caused by end-of-file or by a mid-file I/O error, and why does it matter?**  
+
+> Your answer here...
+
+---
+
+**Q8: The example uses `__attribute__((packed))` on the on-disk header struct. What risk does this introduce, and what is a safer alternative for defining portable binary layouts?**  
+
+> Your answer here...
+
+---

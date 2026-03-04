@@ -70,7 +70,7 @@ dayNN: solve task and pass test/asan/valgrind
 
 - `README.md` - general instructions and workflow
 - `Makefile` - root dispatcher to day-specific makefiles
-- `day01` ... `day30`
+- `day01` ... `day35`
   - `README.md` - day task and acceptance criteria
   - `materials/` - short notes, links, checklist
   - `solution/` - your implementation area

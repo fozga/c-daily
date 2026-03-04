@@ -45,6 +45,50 @@ String-to-number conversion must be done defensively.
 `errno` is sticky; it keeps old values until overwritten. Clearing it first
 lets you attribute `ERANGE` to this conversion call.
 
+### Example
+
+```c
+#include <errno.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <limits.h>
+
+/* Returns 0 on success and stores the int32_t in *out.
+   Returns -1 on any parse or range error. */
+int parse_int32(const char *str, int32_t *out) {
+    if (!str || *str == '\0') return -1;   /* reject empty string */
+
+    char *end;
+    errno = 0;                             /* step 1: clear sticky errno    */
+    long val = strtol(str, &end, 10);      /* step 2: convert               */
+
+    if (end == str)       return -1;       /* step 3: no digits consumed     */
+    if (*end != '\0')     return -1;       /* step 4: trailing garbage       */
+    if (errno == ERANGE)  return -1;       /* step 5: out of long range      */
+    if (val < INT32_MIN || val > INT32_MAX) return -1; /* step 6: narrow    */
+
+    *out = (int32_t)val;
+    return 0;
+}
+
+/* Recommended line-oriented flow */
+void parse_line_example(FILE *fp) {
+    char buf[256];
+    if (!fgets(buf, sizeof buf, fp)) {
+        if (feof(fp))   { /* normal end-of-file */ }
+        else            { /* I/O error via ferror(fp) */ }
+        return;
+    }
+    /* Strip trailing newline before parsing fields */
+    buf[strcspn(buf, "\n")] = '\0';
+
+    int32_t id;
+    if (parse_int32(buf, &id) != 0) {
+        /* report specific error, don't silently accept bad data */
+    }
+}
+```
+
 ## 3) `sscanf` usage and limits
 
 `sscanf` can be useful for simple structured parsing of an in-memory line.

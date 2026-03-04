@@ -13,34 +13,50 @@ make clean
 
 ## Answers
 
-1. What is the main advantage of a table-driven FSM over a switch-based one?  
-   *Hint: think scalability, readability, and transition coverage visibility.*  
-   > TODO: write your answer here.
+**Q1: Compare a switch-based FSM and a table-driven FSM for a machine with 10 states and 8 events. How many explicit `case` clauses does the switch version need vs. how many table entries? Which is easier to audit for missing transitions?**  
 
-2. How do you map an enum State and enum Event to a 2D array index?  
-   *Hint: enum integer values directly index transitions[state][event].*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What should the FSM do if the table entry for [current_state][event] is empty/NULL?  
-   *Hint: reject safely and keep current state unchanged.*  
-   > TODO: write your answer here.
+---
 
-4. Why are FSMs heavily used in embedded systems instead of blocking threads?  
-   *Hint: deterministic event handling and non-blocking control flow.*  
-   > TODO: write your answer here.
+**Q2: In `fsm_dispatch`, should the state be updated before or after the action callback is invoked? Justify your answer by describing a concrete bug that occurs if you choose the wrong order.**  
 
-5. What is the purpose of the action callback in a transition table?  
-   *Hint: separate side effects from transition logic.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should event/state values be bounds-checked before table indexing?  
-   *Hint: prevent undefined behavior from out-of-range access.*  
-   > TODO: write your answer here.
+---
 
-7. Why is explicit handling of invalid transitions important in production code?  
-   *Hint: unexpected inputs occur and must not corrupt FSM state.*  
-   > TODO: write your answer here.
+**Q3: What undefined behaviour is triggered if `event` is not bounds-checked before indexing `transitions[state][event]`, and why can a compiler exploit it?**  
 
-8. What type of bugs appear when transition rules are scattered across many `if` branches?  
-   *Hint: missing branches, duplicated logic, and inconsistent behavior.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: A `Transition` struct has `action` as a `NULL` function pointer and `valid = true`. Is this a valid transition? What should `fsm_dispatch` do with it?**  
+
+> Your answer here...
+
+---
+
+**Q5: Explain how `fsm->user_ctx` allows multiple FSM instances to share the same action callbacks without using global variables. Give an example use case.**  
+
+> Your answer here...
+
+---
+
+**Q6: Why are FSMs preferred over blocking threads in deeply embedded systems? Name two resource constraints that make the FSM approach attractive.**  
+
+> Your answer here...
+
+---
+
+**Q7: Uninitialized `Transition` structs in C zero-initialize to `{next_state=0, action=NULL, valid=false}` when declared `static`. Why is relying on this zero-init dangerous for invalid entries in the transition table?**  
+
+> Your answer here...
+
+---
+
+**Q8: Sketch the state-transition diagram for the four-state TCP-like machine (CLOSED, LISTEN, SYN_RCVD, ESTABLISHED) and identify which `(state, event)` pair represents the longest valid sequence to reach ESTABLISHED. How many `fsm_dispatch` calls does it take?**  
+
+> Your answer here...
+
+---

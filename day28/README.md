@@ -8,6 +8,11 @@ existing Day 23 behavior.
 Day 7 of the project and Part 1 of the 3-part series (Days 28-30). You evolve
 the pattern language without breaking prior functionality.
 
+## Project continuity (required)
+
+Copy your passing Day 27 implementation into `day28/solution/` before starting.
+Preserve all earlier behavior while adding regex-lite syntax.
+
 ## New syntax
 
 - `[abc]` matches one char from set `{a,b,c}`

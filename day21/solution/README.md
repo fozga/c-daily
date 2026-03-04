@@ -9,34 +9,48 @@
 
 ## Answers
 
-1. What happens if you put code with side-effects inside an `assert()`?  
-   *Hint: assertions can be compiled out with `NDEBUG`.*  
-   > TODO: write your answer here.
+**Q1: What happens to code with side effects inside `assert(cond)` when the binary is compiled with `-DNDEBUG`? Show the difference with a concrete before/after example.**  
 
-2. How do you turn off assertions in a production build using GCC?  
-   *Hint: define the macro that disables assert checks.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. Why should out-of-memory handling be tested using a "seam" rather than real OOM?  
-   *Hint: deterministic and reproducible failure injection.*  
-   > TODO: write your answer here.
+---
 
-4. What is a data structure "invariant"?  
-   *Hint: condition that must remain true for valid state.*  
-   > TODO: write your answer here.
+**Q2: What GCC flag disables all assertions, and where in a build system would you apply it (debug vs release)? What is the risk of disabling assertions too aggressively?**  
 
-5. If user input is invalid, should you use assert or return an error code?  
-   *Hint: user/runtime errors are expected paths, not developer bugs.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why run invariant checks after mutating operations?  
-   *Hint: catch corruption at the point it is introduced.*  
-   > TODO: write your answer here.
+---
 
-7. What is the benefit of a `MALLOC_SEAM` macro in C modules?  
-   *Hint: swappable allocation behavior for tests.*  
-   > TODO: write your answer here.
+**Q3: Why is a `MALLOC_SEAM` macro plus a controllable test allocator a better approach to OOM testing than simply trying to exhaust real system memory?**  
 
-8. Why should test code reset fault injection state between tests?  
-   *Hint: avoid order-dependent flaky failures.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Define "data structure invariant" and list three invariants that must hold for a valid singly linked list. What does it mean for an invariant check to "fire at the mutation site"?**  
+
+> Your answer here...
+
+---
+
+**Q5: What is the design rule for choosing between `assert` and returning an error code? Give one example of each category and explain why mixing them up causes real problems.**  
+
+> Your answer here...
+
+---
+
+**Q6: Why should `slist_verify_invariants` be called at the end of every mutating function rather than only before reads? What debugging advantage does this placement give you?**  
+
+> Your answer here...
+
+---
+
+**Q7: Describe how the `MALLOC_SEAM` macro allows the same source file to compile correctly for both production and test targets without any `#ifdef` in the business logic itself.**  
+
+> Your answer here...
+
+---
+
+**Q8: What specific failure mode occurs when a test does not reset `test_set_malloc_fail_at(-1)` after an OOM test? Describe a realistic ordering of tests that would expose this as a flaky failure.**  
+
+> Your answer here...

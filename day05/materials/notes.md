@@ -144,6 +144,41 @@ size_t left_len = (size_t)(colon - s); /* 3 */
 
 > **C vs C++:** Arithmetic rules are similar, but C APIs expose this style directly far more often than C++ container interfaces.
 
+## 6) Safe copy functions: `strncpy`, `strlcpy`, and explicit termination
+
+`strcpy` copies until it hits `\0` with no destination limit — a classic buffer overflow. `strncpy` adds a limit but has two non-obvious behaviors:
+
+1. If source length `<` `n`, it **pads** the destination with `\0` up to `n` bytes (potentially expensive).
+2. If source length `>=` `n`, it **does not** write a NUL terminator, leaving the destination unterminated.
+
+This means `strncpy` guarantees NUL-termination only when the source is strictly shorter than the limit — a rule that is easy to misremember.
+
+`strlcpy` (BSD/POSIX extension, not in the C standard) always NUL-terminates, truncates cleanly, and returns the source length, letting callers detect truncation:
+
+```c
+size_t written = strlcpy(dst, src, sizeof(dst));
+if (written >= sizeof(dst)) {
+    /* truncation occurred */
+}
+```
+
+When `strlcpy` is unavailable, the portable idiom is:
+
+```c
+dst[sizeof(dst) - 1] = '\0';
+strncpy(dst, src, sizeof(dst) - 1);
+```
+
+Note the explicit terminator write before `strncpy`, not after.
+
+### Common mistakes
+
+- Assuming `strncpy(dst, src, n)` always leaves `dst` NUL-terminated.
+- Using `sizeof(dst)` as the limit without subtracting 1, leaving no room for the terminator.
+- Using `strcpy` with user-controlled input of unknown length.
+
+> **C vs C++:** `std::string::assign` and similar methods handle length and termination automatically. In C, every copy-to-buffer site requires explicit termination discipline.
+
 ---
 
 Practical rule for this day: any loop over text must use explicit bounds (`i < length`), never sentinel-based traversal unless the API explicitly guarantees NUL termination.

@@ -8,6 +8,11 @@ checks for the mini-grep project.
 Day 5 of the project. Today is about quality gates, not new matching features.
 You write a shell integration test script rather than C source code.
 
+## Project continuity (required)
+
+Copy your passing Day 25 implementation into `day26/solution/` before running the matrix.
+The integration script must validate your cumulative mini-grep, not a fresh scaffold.
+
 ## Task (45-60 min)
 - Build mini-grep from your Day 22–25 code.
 - Review fixture files in `solution/fixtures/`.

@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. Why does `MAX(x++, y++)` produce unexpected results?  
-   *Hint: check how many times each macro argument can be expanded/evaluated.*  
-   > TODO: write your answer here.
+**Q1: `MAX(i++, j++)` where `i = 3, j = 5`. Trace the expansion step by step and show the final values of `i` and `j`. What does this reveal about how the preprocessor handles arguments?**  
 
-2. Why should multi-statement macros be wrapped in `do { } while(0)`?  
-   *Hint: think about `if/else` statement compatibility and single-statement behavior.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What is the difference between `#ifdef FOO` and `#if defined(FOO)`?  
-   *Hint: they are close in behavior; consider composition in larger expressions.*  
-   > TODO: write your answer here.
+---
 
-4. When should you use `static inline` instead of a function-like macro?  
-   *Hint: consider type checking, side effects, and debugging clarity.*  
-   > TODO: write your answer here.
+**Q2: Show a concrete `if/else` fragment that breaks silently when a two-statement macro is NOT wrapped in `do { } while (0)`. Then show how the wrapper fixes it.**  
 
-5. What happens if you define a constant with `#define` and use it in an expression with mixed types?  
-   *Hint: macro replacement has no type; usual arithmetic conversions still apply later.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why are missing parentheses around macro parameters dangerous?  
-   *Hint: operator precedence can change the intended expression meaning.*  
-   > TODO: write your answer here.
+---
 
-7. What risks come from heavy conditional compilation (`#ifdef` sprawl)?  
-   *Hint: think untested branches and maintainability.*  
-   > TODO: write your answer here.
+**Q3: `#ifdef FOO` and `#if defined(FOO)` both test whether `FOO` is defined. Describe a situation where only `#if defined(FOO)` works and `#ifdef FOO` cannot be used.**  
 
-8. Why are include guards critical in C headers?  
-   *Hint: repeated inclusion without guards can cause duplicate declarations/definitions.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: You have a function-like macro `CLAMP(val, lo, hi)` that appears in a hot loop. Give two reasons to prefer a `static inline` function, and one legitimate reason to keep it as a macro.**  
+
+> Your answer here...
+
+---
+
+**Q5: `#define TIMEOUT 30` is used in `sleep(TIMEOUT / 1000.0)`. What type does `TIMEOUT` have at the point of expansion, and what result does the division produce? How would you fix it?**  
+
+> Your answer here...
+
+---
+
+**Q6: `#define ADD(a, b) a + b` is used as `int x = ADD(2, 3) * 4`. What is the result and why? Rewrite the macro to produce the mathematically expected answer.**  
+
+> Your answer here...
+
+---
+
+**Q7: A codebase has 15 nested `#ifdef` blocks controlling platform differences. Describe two concrete maintenance problems this creates and suggest a better architectural approach.**  
+
+> Your answer here...
+
+---
+
+**Q8: A header is included from three `.c` files. Without include guards, what exact compiler error can occur and why? Would `#pragma once` solve the same problem?**  
+
+> Your answer here...
+
+---

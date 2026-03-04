@@ -32,6 +32,57 @@ When short read/write occurs:
 
 Never assume a single call fully succeeds without checking return count.
 
+### Example
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+/* On-disk header: always use fixed-width types, never plain int/long */
+typedef struct {
+    uint8_t  magic[4];    /* e.g. { 'B','R','E','C' }   */
+    uint32_t version;     /* format version              */
+    uint32_t rec_count;   /* number of records following */
+} __attribute__((packed)) file_header_t;
+
+/* Write header + records, check every call */
+int write_file(const char *path, const void *recs, uint32_t n, size_t rec_size) {
+    FILE *fp = fopen(path, "wb");   /* "wb" — never "w" for binary */
+    if (!fp) return -1;
+
+    file_header_t hdr = {
+        .magic     = {'B','R','E','C'},
+        .version   = 1,
+        .rec_count = n,
+    };
+
+    if (fwrite(&hdr, sizeof hdr, 1, fp) != 1) { fclose(fp); return -1; }
+    if (n > 0 && fwrite(recs, rec_size, n, fp) != n) {
+        fclose(fp); return -1;
+    }
+    fclose(fp);
+    return 0;
+}
+
+/* Read and validate — reject unknown magic/version before touching payload */
+int read_file(const char *path, void *out_buf, uint32_t max_recs, size_t rec_size) {
+    FILE *fp = fopen(path, "rb");
+    if (!fp) return -1;
+
+    file_header_t hdr;
+    if (fread(&hdr, sizeof hdr, 1, fp) != 1) { fclose(fp); return -1; }
+
+    if (memcmp(hdr.magic, "BREC", 4) != 0) { fclose(fp); return -1; } /* bad magic  */
+    if (hdr.version != 1)                  { fclose(fp); return -1; } /* bad version*/
+    if (hdr.rec_count > max_recs)          { fclose(fp); return -1; } /* too many   */
+
+    size_t got = fread(out_buf, rec_size, hdr.rec_count, fp);
+    fclose(fp);
+    return (got == hdr.rec_count) ? (int)got : -1;
+}
+```
+
 ## 3) Fixed-width integer types for file formats
 
 Binary formats must be explicit about field size. Use `<stdint.h>` types:

@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. What is an opaque pointer and why must the struct be defined in the `.c` file?  
-   *Hint: think about encapsulation and preventing consumers from depending on internals.*  
-   > TODO: write your answer here.
+**Q1: A consumer declares `store_t *s` using only `store.h`. Explain precisely why `s->count` fails to compile, even though `count` does exist in the struct. What mechanism enforces this at the language level?**  
 
-2. What does `static` mean at file scope in C?  
-   *Hint: this is about linkage visibility across translation units.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. If a consumer only has `store.h`, can they read the internals of `store_t`? Why or why not?  
-   *Hint: consider what information a forward declaration does and does not provide.*  
-   > TODO: write your answer here.
+---
 
-4. What is the ABI benefit of opaque types compared to fully public structs?  
-   *Hint: changing internal layout should not force consumer recompilation contracts.*  
-   > TODO: write your answer here.
+**Q2: Two `.c` files both define a `static` function called `hash_key`. Will this cause a linker error? Contrast this with what would happen if both functions were non-`static`.**  
 
-5. What are the downsides of the opaque pointer pattern?  
-   *Hint: think heap allocation, pointer indirection, and boilerplate.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should tests for encapsulation include only the public header?  
-   *Hint: this validates real consumer constraints.*  
-   > TODO: write your answer here.
+---
 
-7. Why are NULL-safe destroy functions useful in C APIs?  
-   *Hint: simplify cleanup paths and error handling code.*  
-   > TODO: write your answer here.
+**Q3: You want to change `store_t`'s internal hash table from linear probing to chaining. With the opaque pattern, which files must be recompiled? If the struct were fully public in `store.h`, what additional files would need to be recompiled or changed?**  
 
-8. What role do private headers like `store_internal.h` play in module design?  
-   *Hint: separate implementation details from stable API surface.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Describe an ABI-level scenario where a public struct causes a binary-compatibility break that an opaque handle would have prevented. (Assume a pre-compiled consumer library.)**  
+
+> Your answer here...
+
+---
+
+**Q5: `store_create` can fail and return NULL. Write out the idiomatic NULL-check pattern a caller should use, and explain why `store_destroy(NULL)` being safe matters for error-path cleanup.**  
+
+> Your answer here...
+
+---
+
+**Q6: A junior engineer adds `#include "store_internal.h"` to `tests.c` "just to inspect the count field". Explain the concrete maintenance and correctness risks this introduces.**  
+
+> Your answer here...
+
+---
+
+**Q7: Compare the opaque C handle pattern to C++'s PIMPL idiom. What does each approach guarantee at the language level vs at the convention level?**  
+
+> Your answer here...
+
+---
+
+**Q8: You are designing a `store_foreach` iterator that visits every key-value pair. Should it accept a function pointer callback or return an iterator struct? Discuss the tradeoffs in terms of encapsulation and ease of use for the caller.**  
+
+> Your answer here...
+
+---

@@ -11,34 +11,50 @@ Direct invocation:
 
 ## Answers
 
-1. What is the difference between an integration test and a unit test?  
-   *Hint: isolation level and system boundary scope differ.*  
-   > TODO: write your answer here.
+**Q1: Your unit tests for `matcher_match_line` all pass, but the shell matrix reveals that `mini-grep -n "foo" a.txt` prints line numbers starting from `0` instead of `1`. Why couldn't the unit test catch this, and why does the integration test catch it?**
 
-2. How do you check the exit code of a command in a shell script?  
-   *Hint: inspect `$?` immediately after command execution.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What makes a good regression test?  
-   *Hint: deterministic, focused, and tied to a previously observed bug.*  
-   > TODO: write your answer here.
+---
 
-4. What are the risks of golden/snapshot testing?  
-   *Hint: can become brittle when output formatting changes intentionally.*  
-   > TODO: write your answer here.
+**Q2: A test case runs `"$GREP" "foo" fixtures/simple.txt` and checks `$?`. Another developer changes the fixture file to add a matching line. The test now fails. Is this a problem with the test or with the fixture? How should fixtures be managed?**
 
-5. What CLI behaviors are difficult to test with unit tests and require integration testing?  
-   *Hint: process-level behavior like exit codes/stdout/stderr formatting.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should integration tests validate stderr separately from stdout?  
-   *Hint: data output and diagnostics serve different consumers.*  
-   > TODO: write your answer here.
+---
 
-7. Why should fixture files be committed and stable over time?  
-   *Hint: reproducibility of failures and CI consistency.*  
-   > TODO: write your answer here.
+**Q3: Describe a test case that validates the multi-file filename prefix: what fixture files do you need, what command do you run, and what exact stdout output do you assert?**
 
-8. Why should a test matrix include both success and failure scenarios?  
-   *Hint: robustness includes correct handling of invalid inputs and errors.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Your test script checks stdout with `diff` but never captures stderr. mini-grep is accidentally printing an extra blank line to stderr on every run. Would this test matrix catch that bug? What change fixes the gap?**
+
+> Your answer here...
+
+---
+
+**Q5: A golden output snapshot test for `-i "HELLO" file.txt` starts failing after you fix a bug where `-i` was also lowercasing the *output* line (it should preserve the original case). Is updating the golden output correct here? Justify your answer.**
+
+> Your answer here...
+
+---
+
+**Q6: `test_matrix.sh` tests `mini-grep "foo" nofile.txt` and expects exit code `2`. After the Day 25 changes, the exit code is actually `1` because `any_match` stays false but `any_error` is true and there are no other files. Is the test wrong or the implementation wrong — trace through the exit-code logic.**
+
+> Your answer here...
+
+---
+
+**Q7: Your matrix currently runs `bash test_matrix.sh ./mini-grep` manually. Name two things you would need to change to make it run reliably in a CI pipeline.**
+
+> Your answer here...
+
+---
+
+**Q8: Explain why testing `mini-grep -h` requires asserting both stdout content AND exit code — and why asserting only the exit code would be insufficient.**
+
+> Your answer here...
+
+---

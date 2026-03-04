@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. What is the worst-case complexity of the naive substring search algorithm?  
-   *Hint: compare every possible start position against pattern length.*  
-   > TODO: write your answer here.
+**Q1: When matching pattern `"a.b"` against line `"xaab"`, list every start position the outer loop tries and explain at which position the inner loop succeeds — or state why it never does.**
 
-2. Why is `tolower()` not safe for non-ASCII characters?  
-   *Hint: locale/Unicode case folding is broader than single-byte ASCII mapping.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. Should an empty pattern match every line or no lines?  
-   *Hint: choose and justify a consistent search semantics.*  
-   > TODO: write your answer here.
+---
 
-4. What does it mean to "search" vs "match" a line?  
-   *Hint: substring existence vs full-string equivalence.*  
-   > TODO: write your answer here.
+**Q2: Why can't you replace `matcher_match_line` with a single call to `strstr(3)` when the pattern contains `.` wildcards?**
 
-5. How do you handle the case where the pattern is longer than the line?  
-   *Hint: no valid start positions exist; return no-match safely.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should wildcard `.` logic be implemented in the inner comparison loop, not preprocessed away?  
-   *Hint: matching depends on alignment at each candidate start position.*  
-   > TODO: write your answer here.
+---
 
-7. Why cast to `unsigned char` before passing to `tolower`?  
-   *Hint: negative signed-char values are undefined for ctype macros/functions.*  
-   > TODO: write your answer here.
+**Q3: Your `matcher_match_line` returns `1` for every line when pattern is `""` (empty string). Is this correct for mini-grep? What does real POSIX grep do with an empty pattern?**
 
-8. Why should matcher code avoid modifying input `line` and `pattern` buffers?  
-   *Hint: ownership/const correctness and caller expectations.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Scanning line `"aaab"` for pattern `"aab"`: how many iterations of the outer loop execute before a match is found? Trace it step by step.**
+
+> Your answer here...
+
+---
+
+**Q5: The outer loop guard is `i <= llen - plen`. What happens if you change `<=` to `<`, and can you construct a test case that exposes the bug?**
+
+> Your answer here...
+
+---
+
+**Q6: In the inner `match_here` loop, why must `.` be checked before the character comparison, not as a fallback after a mismatch?**
+
+> Your answer here...
+
+---
+
+**Q7: Why is `tolower((unsigned char)c)` required rather than just `tolower(c)`, even though `char` and `unsigned char` hold the same bits on most platforms?**
+
+> Your answer here...
+
+---
+
+**Q8: `matcher_match_line` takes `const char *line`. If the function were instead declared with `char *line` (non-const), what concrete problem could arise for mini-grep's scanner loop?**
+
+> Your answer here...
+
+---

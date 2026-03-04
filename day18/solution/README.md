@@ -9,34 +9,48 @@
 
 ## Answers
 
-1. Why must you declare the node struct as `struct node` rather than just an anonymous typedef?  
-   *Hint: self-referential pointers need a named struct tag.*  
-   > TODO: write your answer here.
+**Q1: Why must the node type be declared as `struct slist_node` with a named tag, rather than an anonymous typedef struct? What compilation error occurs if you use an anonymous struct?**  
 
-2. What is the danger of iterating a list with `free(curr); curr = curr->next;`?  
-   *Hint: consider object lifetime and pointer validity after free.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. Why is deleting the head node a special case compared to deleting a middle node?  
-   *Hint: the list's external entry pointer must be updated.*  
-   > TODO: write your answer here.
+---
 
-4. What is the time complexity of appending to the tail of a singly linked list if you only store a head pointer?  
-   *Hint: think about traversal cost to find the last node.*  
-   > TODO: write your answer here.
+**Q2: Why is `free(curr); curr = curr->next;` undefined behavior (UB), and what is the correct two-step pattern that avoids it?**  
 
-5. What memory issues does Valgrind report if you forget to implement `slist_destroy`?  
-   *Hint: all allocated nodes remain reachable/lost at process exit.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should `slist_get_at` validate bounds before traversal?  
-   *Hint: prevent NULL dereference and undefined behavior.*  
-   > TODO: write your answer here.
+---
 
-7. Why must count metadata be updated consistently on insert/remove?  
-   *Hint: stale count breaks API invariants and tests.*  
-   > TODO: write your answer here.
+**Q3: Why does removing the head node require a different code path than removing a middle node? What pointer must be updated in each case?**  
 
-8. What edge cases should always be unit-tested in list removal logic?  
-   *Hint: empty, head, tail, middle, and missing value cases.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: What is the time complexity of appending to the tail when only a `head` pointer is stored, and how would adding a `tail` pointer change both the complexity and the implementation burden?**  
+
+> Your answer here...
+
+---
+
+**Q5: What does Valgrind report — and under which leak category — if `slist_destroy` is never called before process exit? How does the answer change if the head pointer has been set to NULL without freeing the nodes?**  
+
+> Your answer here...
+
+---
+
+**Q6: Why must `slist_get_at` validate the index before traversal, and what undefined behavior (UB) can result if it does not?**  
+
+> Your answer here...
+
+---
+
+**Q7: Why must `count` be updated atomically with every insert and remove operation? What class of bugs appears if count drifts from the actual node count?**  
+
+> Your answer here...
+
+---
+
+**Q8: List all distinct edge cases that removal logic must handle correctly. For each case, describe what pointer update distinguishes it from the general case.**  
+
+> Your answer here...

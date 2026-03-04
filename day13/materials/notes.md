@@ -6,15 +6,82 @@ Public header:
 - forward-declare struct type
 - expose only pointer handle and API functions
 
-Example pattern:
-- `typedef struct store store_t;`
-
 Private definition lives in `.c` (or private header consumed only by `.c`).
 
 Benefits:
 - consumers cannot access internal fields directly
 - easier to maintain invariants
 - internal data structure can change without API breakage
+
+### Example
+
+```c
+/* ---- store.h (public API — ships to consumers) ---- */
+#ifndef STORE_H
+#define STORE_H
+#include <stddef.h>
+
+typedef struct store store_t;   /* forward declaration only — size unknown */
+
+store_t *store_create(size_t capacity);
+void     store_destroy(store_t *s);          /* safe to call with NULL     */
+int      store_set(store_t *s, const char *key, int value);
+int      store_get(const store_t *s, const char *key, int *out_value);
+
+#endif /* STORE_H */
+
+
+/* ---- store_internal.h (private — included ONLY by store.c) ---- */
+#ifndef STORE_INTERNAL_H
+#define STORE_INTERNAL_H
+#include "store.h"
+
+#define STORE_MAX_ENTRIES 256
+
+typedef struct {
+    char key[64];
+    int  value;
+    int  occupied;
+} store_entry_t;
+
+struct store {                  /* full definition: consumers never see this */
+    store_entry_t entries[STORE_MAX_ENTRIES];
+    size_t        count;
+    size_t        capacity;
+};
+
+#endif /* STORE_INTERNAL_H */
+
+
+/* ---- store.c (implementation) ---- */
+#include "store_internal.h"     /* includes both headers transitively */
+#include <stdlib.h>
+#include <string.h>
+
+store_t *store_create(size_t capacity) {
+    store_t *s = calloc(1, sizeof *s);
+    if (s) s->capacity = capacity < STORE_MAX_ENTRIES
+                         ? capacity : STORE_MAX_ENTRIES;
+    return s;
+}
+
+void store_destroy(store_t *s) {
+    free(s);   /* free(NULL) is safe; no NULL check needed */
+}
+
+/* ---- tests.c (consumer) ---- */
+/* #include "store_internal.h"  <-- FORBIDDEN: breaks encapsulation */
+#include "store.h"              /* only public API is needed         */
+
+void test_basic(void) {
+    store_t *s = store_create(16);
+    store_set(s, "key1", 42);
+    int v;
+    store_get(s, "key1", &v);   /* v == 42 */
+    store_destroy(s);
+    /* s->count;  <-- compile error: incomplete type 'store_t' — by design */
+}
+```
 
 ## 2) Why hiding internals matters
 
@@ -35,6 +102,29 @@ In C, each `.c` file is a translation unit.
 - communicates implementation-private helpers
 
 Use `static` for helper functions and private globals in module `.c` files.
+
+```c
+/* store.c — these helpers are invisible outside this translation unit */
+
+static size_t hash_key(const char *key, size_t capacity) {
+    size_t h = 5381;
+    while (*key) h = h * 33 ^ (unsigned char)*key++;
+    return h % capacity;
+}
+
+static store_entry_t *find_entry(store_t *s, const char *key) {
+    size_t idx = hash_key(key, s->capacity);
+    /* linear probe — implementation detail, never exposed in store.h */
+    for (size_t i = 0; i < s->capacity; i++) {
+        store_entry_t *e = &s->entries[(idx + i) % s->capacity];
+        if (!e->occupied) return NULL;
+        if (strcmp(e->key, key) == 0) return e;
+    }
+    return NULL;
+}
+/* Without 'static', hash_key and find_entry would be exported symbols
+   and could collide with functions of the same name in other modules. */
+```
 
 ## 4) Public vs private headers
 

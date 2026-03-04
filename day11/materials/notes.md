@@ -18,35 +18,63 @@ Typical directives:
 
 ### Double evaluation
 
-Macro:
-- `#define MAX(a, b) ((a) > (b) ? (a) : (b))`
+```c
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-Call:
-- `MAX(i++, j++)`
+/* BUG: i++ is evaluated twice if i < j; j++ is evaluated twice if j < i */
+int result = MAX(i++, j++);
+/* expands to: ((i++) > (j++) ? (i++) : (j++))
+   — one of the two variables is incremented an extra time */
+```
 
 Problem: one argument can be evaluated more than once, producing unexpected
 increments and side effects.
 
 ### Operator precedence bugs
 
-Macro:
-- `#define SQUARE(x) x * x`
+```c
+#define SQUARE(x) x * x          /* BAD: no parentheses */
 
-`SQUARE(1 + 2)` expands to `1 + 2 * 1 + 2`, not `(1 + 2) * (1 + 2)`.
+int a = SQUARE(1 + 2);
+/* expands to: 1 + 2 * 1 + 2  ==  5, not 9 */
+
+#define SQUARE_SAFE(x) ((x) * (x))  /* parenthesize argument AND result */
+
+int b = SQUARE_SAFE(1 + 2);
+/* expands to: ((1 + 2) * (1 + 2))  ==  9 */
+```
 
 Always parenthesize both parameters and the full replacement body when
 appropriate.
 
 ### Multi-statement macro hazards
 
-Macro bodies with several statements can break control flow:
-- dangling `else`
-- partial block execution
+```c
+/* BAD: only the first statement is conditional */
+#define LOG_AND_FAIL(msg) \
+    log_error(msg);       \
+    return -1;
 
-Wrap in:
-- `do { ... } while (0)`
+if (cond)
+    LOG_AND_FAIL("oops");   /* return -1 executes unconditionally! */
+else
+    do_other();
 
-This makes macro use behave like a single statement.
+/* SAFE: do-while wraps both statements into one syntactic unit */
+#define LOG_AND_FAIL(msg)     \
+    do {                      \
+        log_error(msg);       \
+        return -1;            \
+    } while (0)
+
+if (cond)
+    LOG_AND_FAIL("oops");   /* now the else is not orphaned */
+else
+    do_other();
+```
+
+Wrap multi-statement macro bodies in `do { ... } while (0)` so the macro
+behaves like a single statement everywhere.
 
 ## 3) Safer macro patterns
 
@@ -74,24 +102,55 @@ For macros that must avoid double evaluation, use local temporary variables via
 compiler extensions only if portability allows, or better: move logic into
 `static inline` functions.
 
+### Example
+
+```c
+/* Prefer this over the MAX macro for typed, side-effect-safe comparisons */
+static inline int max_int(int a, int b) { return a > b ? a : b; }
+static inline double max_double(double a, double b) { return a > b ? a : b; }
+
+/* Legitimate use of a macro: compile-time type size assertion */
+#define STATIC_ASSERT_SIZE(type, expected_bytes) \
+    _Static_assert(sizeof(type) == (expected_bytes), \
+                   "unexpected size for " #type)
+
+STATIC_ASSERT_SIZE(uint32_t, 4);  /* caught at compile time if wrong */
+
+/* Legitimate use: stringification and token-pasting */
+#define STRINGIFY(x)  #x
+#define CONCAT(a, b)  a##b
+
+const char *name = STRINGIFY(my_var);   /* "my_var" */
+int CONCAT(prefix_, value) = 42;        /* prefix_value = 42 */
+```
+
 ## 4) Include guards vs `#pragma once`
 
 ### Include guards
 
-Pattern:
-- `#ifndef FOO_H`
-- `#define FOO_H`
-- `...`
-- `#endif`
+```c
+/* foo.h */
+#ifndef FOO_H
+#define FOO_H
+
+/* declarations here — included any number of times, compiled once */
+void foo_init(void);
+
+#endif /* FOO_H */
+```
 
 Portable and standard C practice.
 
 ### `#pragma once`
 
+```c
+#pragma once   /* non-standard, but widely supported shorthand */
+void foo_init(void);
+```
+
 Concise and widely supported, but technically non-standard.
 
-Tradeoff:
-- convenience vs strict portability guarantees.
+Tradeoff: convenience vs strict portability guarantees.
 
 ## 5) Conditional compilation
 

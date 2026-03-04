@@ -67,6 +67,52 @@ For leaks:
 - Free nested members before freeing container struct.
 - Set pointers to `NULL` after free when appropriate.
 
+## 6) Example Valgrind output
+
+Typical Valgrind invocation for leak analysis:
+
+```
+valgrind --leak-check=full --show-leak-kinds=all \
+         --track-origins=yes --error-exitcode=1 ./test_runner
+```
+
+### Uninitialized value error
+
+```
+==23456== Conditional jump or move depends on uninitialised value(s)
+==23456==    at 0x10916D: process_node (leaky_workflow.c:58)
+==23456==    by 0x109270: run_workflow (leaky_workflow.c:91)
+==23456==  Uninitialised value was created by a heap allocation
+==23456==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/...)
+==23456==    by 0x1090AC: create_node (leaky_workflow.c:22)
+```
+
+Reading this: a field inside the struct returned by `create_node` was never
+written. `--track-origins=yes` traces the uninitialized bytes back to the
+`malloc` call at line 22. Fix: zero the struct after allocation
+(`memset(p, 0, sizeof(*p))`) or initialize every field explicitly.
+
+### Leak summary
+
+```
+==23456== LEAK SUMMARY:
+==23456==    definitely lost: 48 bytes in 3 blocks
+==23456==    indirectly lost: 192 bytes in 12 blocks
+==23456==      possibly lost: 0 bytes in 0 blocks
+==23456==    still reachable: 16 bytes in 1 blocks
+==23456==         suppressed: 0 bytes in 0 blocks
+```
+
+Reading order:
+
+1. Fix `definitely lost` first — no live pointer refers to these blocks; they
+   are unrecoverable true leaks.
+2. `indirectly lost` usually disappears once its parent block is freed.
+3. Investigate `still reachable` — the pointer exists at exit but the subsystem
+   never calls its shutdown/cleanup function.
+4. `possibly lost` needs manual analysis (interior pointers or ambiguous
+   references).
+
 ## Common mistakes
 
 - Freeing only outer struct but not internal heap fields.

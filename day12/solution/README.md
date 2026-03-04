@@ -10,34 +10,50 @@
 
 ## Answers
 
-1. Why does the compiler add padding between struct fields?  
-   *Hint: alignment constraints affect efficient/safe memory access.*  
-   > TODO: write your answer here.
+**Q1: Explain why the compiler inserts padding between `uint8_t flags` and `uint32_t id` in `record_bad_t`. What hardware property makes this necessary, and does the C standard mandate it or leave it ABI-defined?**  
 
-2. How does `offsetof(struct S, field)` help diagnose layout issues?  
-   *Hint: it gives exact byte offsets of fields in memory.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. Why is `__attribute__((packed))` dangerous on some architectures?  
-   *Hint: think unaligned accesses, performance, and potential traps.*  
-   > TODO: write your answer here.
+---
 
-4. What is "tail padding" and when does it appear?  
-   *Hint: arrays of structs require each element to preserve alignment.*  
-   > TODO: write your answer here.
+**Q2: Given `record_bad_t` (sizeof == 12) and `record_good_t` (sizeof == 8), use `offsetof` and `sizeof` values to identify exactly where the 4 bytes of padding live in `record_bad_t`.**  
 
-5. How can you enforce a struct size at compile time using `_Static_assert`?  
-   *Hint: compare `sizeof(type)` against expected constant.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why can raw `fwrite`/`fread` of structs break binary compatibility?  
-   *Hint: field order, padding, and ABI details may vary.*  
-   > TODO: write your answer here.
+---
 
-7. Why are fixed-width types preferred in serialized formats?  
-   *Hint: deterministic field sizes across platforms.*  
-   > TODO: write your answer here.
+**Q3: A colleague proposes using `__attribute__((packed))` to eliminate all padding so structs can be safely written with `fwrite`. List two concrete failure modes this can introduce even on x86.**  
 
-8. What does `-Wpadded` help you discover during debugging?  
-   *Hint: compiler-inserted layout gaps that are otherwise invisible.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: What is "tail padding"? For an array `record_good_t arr[3]`, how many padding bytes total does the compiler insert, and why?**  
+
+> Your answer here...
+
+---
+
+**Q5: You add `_Static_assert(sizeof(record_good_t) == 8, "size changed")` to your code, then a teammate adds a new `uint32_t` field. Describe what the developer sees and why this is better than a runtime test.**  
+
+> Your answer here...
+
+---
+
+**Q6: Two programs on the same machine write and read a struct with `fwrite`/`fread`. It works today. List three changes that could silently break the round-trip in the future without any compiler warning.**  
+
+> Your answer here...
+
+---
+
+**Q7: How does `-Wpadded` differ from checking `sizeof` and `offsetof` manually? When is each approach more useful?**  
+
+> Your answer here...
+
+---
+
+**Q8: Describe a proper field-by-field serialization strategy for `record_good_t` that avoids every padding and alignment hazard discussed in the notes.**  
+
+> Your answer here...
+
+---

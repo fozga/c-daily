@@ -9,34 +9,48 @@
 
 ## Answers
 
-1. Why is open addressing often faster than chaining on modern CPUs?  
-   *Hint: compare pointer chasing vs contiguous array scans.*  
-   > TODO: write your answer here.
+**Q1: Why is open addressing often faster than chaining for lookup-heavy workloads on modern CPUs? What hardware characteristic makes the difference?**  
 
-2. Why must the hash map duplicate the string key (`strdup`) instead of just storing the `const char*`?  
-   *Hint: ownership and caller lifetime are not guaranteed.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What happens if you resize an open-addressed map by just copying the array using `memcpy`?  
-   *Hint: probe positions depend on `hash % capacity`.*  
-   > TODO: write your answer here.
+---
 
-4. What is a tombstone and why is it necessary for deletion in linear probing?  
-   *Hint: empty slot termination can break probe chains after deletions.*  
-   > TODO: write your answer here.
+**Q2: Why must the map call `strdup` (or equivalent) on the key string rather than storing the caller's `const char*` pointer directly? Give two distinct scenarios where storing the pointer would cause silent corruption.**  
 
-5. What does the load factor represent?  
-   *Hint: ratio of stored elements to available capacity.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why can overwriting an existing key leak memory if done incorrectly?  
-   *Hint: old duplicated key/value resources may become unreachable.*  
-   > TODO: write your answer here.
+---
 
-7. Why should resize reinsert entries instead of preserving old indices?  
-   *Hint: modulo arithmetic changes under new capacity.*  
-   > TODO: write your answer here.
+**Q3: Why does resizing by `memcpy` produce an immediately broken table? Walk through a concrete two-element example showing how a previously valid probe chain becomes unreachable after the capacity changes.**  
 
-8. How do collisions affect complexity as load factor approaches 1.0?  
-   *Hint: probe sequences get longer and average operation cost rises.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: What is a tombstone, and why is it necessary when deleting entries from a linear-probing table? Show with an example how omitting tombstones causes `get` to return false-negative results.**  
+
+> Your answer here...
+
+---
+
+**Q5: What does load factor measure, and why does this implementation trigger a resize at 0.75 rather than at 0.99 or 0.5?**  
+
+> Your answer here...
+
+---
+
+**Q6: When a `put` operation finds that the key already exists and updates the value, what memory management steps must happen in what order to avoid a leak?**  
+
+> Your answer here...
+
+---
+
+**Q7: During a resize, you transfer key strings from the old table to the new table. Should you call `strdup` again on each key, or transfer the existing heap pointer? Explain why the wrong choice causes either a double-free or a leak.**  
+
+> Your answer here...
+
+---
+
+**Q8: How does the average number of probes required for a lookup grow as load factor approaches 1.0 in linear probing? Why does this become catastrophic near full capacity?**  
+
+> Your answer here...

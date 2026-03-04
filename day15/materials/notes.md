@@ -96,6 +96,65 @@ Use watchpoints when:
 
 Hardware watchpoints are usually precise but limited in number by CPU support.
 
+## 6) Example GDB session
+
+Suppose `broken_pointers.c` crashes inside `list_reverse`. Here is a realistic
+debugging session from start to root cause.
+
+### Triggering the crash
+
+```
+$ gdb ./test_runner
+(gdb) run
+Starting program: /home/user/day15/test_runner
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000555555555279 in list_reverse (head_ref=0x555555559260)
+    at broken_pointers.c:34
+34              curr->next = prev;
+```
+
+### Reading the backtrace
+
+```
+(gdb) bt
+#0  0x0000555555555279 in list_reverse (head_ref=0x555555559260)
+    at broken_pointers.c:34
+#1  0x0000555555555430 in test_list_reverse () at test_runner.c:97
+#2  0x0000555555555510 in main () at test_runner.c:148
+```
+
+Frame `#0` is the deepest call (crash site). Frame `#1` is the direct caller.
+`main` is frame `#2`.
+
+### Inspecting the crash frame
+
+```
+(gdb) frame 0
+(gdb) print curr
+$1 = (node_t *) 0x0
+(gdb) print prev
+$2 = (node_t *) 0x555555559260
+```
+
+`curr` is `NULL`, yet line 34 attempts `curr->next = prev`.
+Dereferencing a null pointer is undefined behavior (UB); the OS raises SIGSEGV.
+
+### Moving to the caller to find the root cause
+
+```
+(gdb) frame 1
+(gdb) print head
+$3 = (node_t *) 0x0
+```
+
+The test passed an empty list (`head == NULL`). The root cause is a missing
+guard: `list_reverse` must return immediately when the list is empty or has a
+single node.
+
+This illustrates the key principle: **the crash site is the symptom; the root
+cause is usually visible one or more frames higher in the backtrace.**
+
 ## Common mistakes
 
 - Debugging an optimized build first (`-O2`) and assuming missing variables are

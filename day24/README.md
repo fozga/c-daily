@@ -8,6 +8,11 @@ the correct output format.
 Day 3 of the project. You now connect the Day 23 matcher to real input streams.
 `scanner_run` handles one `FILE*`; higher-level CLI loops over file arguments.
 
+## Project continuity (required)
+
+Copy your passing Day 23 implementation into `day24/solution/` before adding new code.
+This project is cumulative: preserve working behavior and extend it incrementally.
+
 ## Specification
 
 Output format:

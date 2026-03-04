@@ -128,6 +128,10 @@ Off-by-one bugs are common:
 - using `<= capacity` instead of `< capacity`
 - advancing cursor before validating requested byte count
 
+### Variable-length arrays (VLAs)
+
+C99 introduced VLAs: arrays whose size is determined at runtime, e.g. `int buf[n]`. They allocate on the stack, so a large or attacker-controlled `n` causes a stack overflow — there is no bounds check and no `NULL` return to detect failure. The `-Wvla` warning flag signals every use of a VLA. In production-quality C code, prefer fixed-size stack arrays or explicit heap allocation instead of VLAs.
+
 ### Example
 
 ```c

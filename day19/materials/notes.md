@@ -17,12 +17,37 @@ locality, but it needs careful load factor management.
 
 ## 2) Linear probing mechanics
 
-Given hash value `h`:
-- `index = h % capacity`
-- If occupied by different key: `index = (index + 1) % capacity`
-- Continue until matching key or empty slot
+Given hash value `h`, the probe sequence wraps around the array:
 
-Probe sequence must be consistent between put/get.
+### Example — FNV-1a hash and linear probe loop
+
+```c
+/* FNV-1a 64-bit hash — fast, good distribution for string keys. */
+static uint64_t fnv1a(const char *key) {
+    uint64_t h = 14695981039346656037ULL;
+    for (const unsigned char *p = (const unsigned char *)key; *p; ++p) {
+        h ^= *p;
+        h *= 1099511628211ULL;
+    }
+    return h;
+}
+
+/* Linear probe lookup. Returns slot index or -1 if not found. */
+static int probe_find(const hashmap_t *m, const char *key) {
+    size_t idx = (size_t)(fnv1a(key) % m->capacity);
+    for (size_t i = 0; i < m->capacity; ++i) {
+        slot_t *s = &m->slots[idx];
+        if (s->state == SLOT_EMPTY)   return -1;       /* definitely absent */
+        if (s->state == SLOT_LIVE && strcmp(s->key, key) == 0)
+            return (int)idx;
+        idx = (idx + 1) % m->capacity;                /* wrap around */
+    }
+    return -1;
+}
+```
+
+Probe sequence must be identical between `put` and `get`; any deviation
+produces silent lookup failures.
 
 ## 3) Key ownership and duplication
 
@@ -36,11 +61,27 @@ Owning key copies is essential for safe map lifetime behavior.
 
 ## 4) Resizing and rehashing
 
-When load factor grows (e.g. >= 0.75), allocate a bigger slot array and reinsert
-all existing entries with new `% new_capacity` math.
+When `count >= capacity * 0.75`, allocate a larger slot array and reinsert all
+live entries using the new capacity's modulo arithmetic.
 
-Important: you cannot `memcpy` old table and expect probing structure to remain
-valid. Indices depend on capacity.
+### Example — why memcpy is wrong
+
+```c
+/* WRONG: copies old probe positions which are invalid under new capacity */
+memcpy(new_slots, old_slots, old_capacity * sizeof(slot_t));
+
+/* CORRECT: reinsert every live entry so indices are recomputed */
+for (size_t i = 0; i < old_capacity; ++i) {
+    if (old_slots[i].state == SLOT_LIVE) {
+        hashmap_put_into(new_slots, new_capacity,
+                         old_slots[i].key, old_slots[i].value);
+        /* key is already duplicated; transfer ownership, do not strdup again */
+    }
+}
+```
+
+After the loop, free `old_slots` (not the keys — ownership moved to the new
+table). Indices depend entirely on capacity, so they must be recomputed.
 
 ## 5) Tombstones for deletion
 

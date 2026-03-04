@@ -9,34 +9,48 @@
 
 ## Answers
 
-1. What is the difference between "definitely lost" and "still reachable"?  
-   *Hint: one has no remaining pointer; the other still has at least one live reference.*  
-   > TODO: write your answer here.
+**Q1: What is the difference between "definitely lost" and "still reachable" in Valgrind's leak categories, and which one is always a bug that must be fixed?**  
 
-2. Why does an "indirectly lost" leak usually disappear when you fix the "definitely lost" leak?  
-   *Hint: child allocations are often only reachable through the leaked parent object.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What does `--track-origins=yes` do in Valgrind?  
-   *Hint: think uninitialized value provenance.*  
-   > TODO: write your answer here.
+---
 
-4. Why might a C++ developer have a harder time dealing with "still reachable" memory in C?  
-   *Hint: compare RAII/destructors vs manual explicit cleanup.*  
-   > TODO: write your answer here.
+**Q2: Why does fixing a "definitely lost" leak often automatically eliminate "indirectly lost" bytes in the same Valgrind run?**  
 
-5. What causes the "Conditional jump depends on uninitialised value" warning?  
-   *Hint: control flow decision uses bytes never initialized by program logic.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should leak fixes prioritize `definitely lost` before `still reachable`?  
-   *Hint: severity and ownership certainty differ.*  
-   > TODO: write your answer here.
+---
 
-7. When is "still reachable" memory acceptable, and when should you still clean it up?  
-   *Hint: process-lifetime caches vs reusable library/module shutdown.*  
-   > TODO: write your answer here.
+**Q3: What does `--track-origins=yes` add to a Valgrind run, and why is it essential for diagnosing "Conditional jump depends on uninitialised value" errors?**  
 
-8. Why can tests pass functionally while Valgrind still reports major issues?  
-   *Hint: logic correctness and memory hygiene are separate axes.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Why does a C developer have to handle "still reachable" memory explicitly in shutdown code, whereas a C++ developer writing the same module often does not?**  
+
+> Your answer here...
+
+---
+
+**Q5: Walk through a concrete scenario that triggers "Conditional jump or move depends on uninitialised value(s)". What must be true about the data and the control flow for this message to appear?**  
+
+> Your answer here...
+
+---
+
+**Q6: Valgrind's recommended fix order is: `definitely lost` → `indirectly lost` → `still reachable`. Explain the reasoning behind this ordering.**  
+
+> Your answer here...
+
+---
+
+**Q7: When is "still reachable" memory acceptable to leave in a production binary, and when must you still add explicit cleanup? Give one example of each case.**  
+
+> Your answer here...
+
+---
+
+**Q8: How can all functional tests pass while Valgrind reports critical memory issues? What does this reveal about the relationship between correctness testing and memory hygiene?**  
+
+> Your answer here...

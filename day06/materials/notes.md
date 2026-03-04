@@ -101,12 +101,14 @@ ptr = tmp;
 
 Frequent bug classes:
 
-- **Memory leak**: allocated block is never freed.
-- **Use-after-free**: accessing memory after it has been freed.
-- **Double free**: freeing the same block twice.
-- **Returning pointer to freed memory**: caller receives dangling pointer.
+- **Memory leak**: allocated block is never freed. No immediate crash; process memory grows until termination or OOM.
+- **Use-after-free**: accessing memory after it has been freed. The allocator may have reused the block; reads return garbage, writes corrupt unrelated objects. Undefined behavior.
+- **Double free**: calling `free` on the same pointer twice corrupts the allocator's internal free-list metadata. This can enable heap-exploitation attacks and typically causes a crash on the next `malloc` or `free` call, not at the double-free site.
+- **Returning pointer to freed memory**: caller receives a dangling pointer; any dereference is undefined behavior.
 
 These often come from unclear ownership or partial-failure cleanup paths.
+
+Valgrind Memcheck detects all four classes: it instruments heap operations and reports the precise allocation/free site alongside the invalid-access site, making ownership bugs much easier to trace than inspecting crash dumps alone.
 
 ### Example
 

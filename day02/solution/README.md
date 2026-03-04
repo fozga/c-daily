@@ -44,70 +44,48 @@ make clean
 
 ## Answers
 
-**Q1: In `int32_t + int32_t`, what type is the expression evaluated in, and why can this still overflow?**  
-*Hint: see `../materials/notes.md` -> Section 2*
+**Q1: The expression `(unsigned int)(-1) < 2u` evaluates to false. Trace through the conversion rules that produce this result and name the specific standard mechanism.**  
 
 > Your answer here...
 
 ---
 
-**Q2: How do integer promotions affect arithmetic on narrower integer types (for example `uint8_t` or `int16_t`)?**  
-*Hint: see `../materials/notes.md` -> Section 2*
+**Q2: Why is signed integer overflow undefined behavior in C, while unsigned overflow is guaranteed to wrap modulo 2^N? What assumption does this let the optimizer make about signed arithmetic that it cannot make about unsigned arithmetic?**  
 
 > Your answer here...
 
 ---
 
-**Q3: What are the usual arithmetic conversions, and why do mixed signed/unsigned expressions surprise people?**  
-*Hint: see `../materials/notes.md` -> Section 2*
+**Q3: The loop `for (size_t i = n - 1; i >= 0; --i)` is intended to count down from `n-1` to `0`. Identify the bug, explain why the comparison can never be false, and rewrite the loop correctly.**  
 
 > Your answer here...
 
 ---
 
-**Q4: Why is signed integer overflow undefined behavior in C, but unsigned overflow defined modulo 2^N?**  
-*Hint: see `../materials/notes.md` -> Section 3*
+**Q4: Write a safe pre-addition overflow check for two `int32_t` values that does not itself invoke undefined behavior. Explain why checking `a + b < a` after the addition is incorrect.**  
 
 > Your answer here...
 
 ---
 
-**Q5: Give one practical bug pattern that appears when code assumes signed overflow wraps.**  
-*Hint: see `../materials/notes.md` -> Section 3*
+**Q5: `uint8_t` arithmetic operands do not stay 8-bit during computation. What type do they promote to, and what consequence does this have if the result is stored back into a `uint8_t` without an explicit cast?**  
 
 > Your answer here...
 
 ---
 
-**Q6: Why can comparing `size_t n` with `int i` produce logic bugs even when no compiler error occurs?**  
-*Hint: see `../materials/notes.md` -> Section 4*
+**Q6: A function parses user input via `strtoul` into `uint32_t`. Name three distinct checks required before using the result as an array index into a buffer of known capacity `cap`.**  
 
 > Your answer here...
 
 ---
 
-**Q7: What is dangerous about subtracting two `size_t` values when the mathematical result may be negative?**  
-*Hint: see `../materials/notes.md` -> Section 4*
+**Q7: Beyond `-Wall -Wextra`, name two warning flags most effective at catching signed/unsigned conversion bugs. Give one example diagnostic message each would produce.**  
 
 > Your answer here...
 
 ---
 
-**Q8: Why do strict warnings (`-Wconversion`, `-Wsign-conversion`) matter for reliability in numeric code?**  
-*Hint: see `../materials/notes.md` -> Section 6*
-
-> Your answer here...
-
----
-
-**Q9: Given a warning like “comparison of integer expressions of different signedness,” what does it imply about the expression?**  
-*Hint: see `../materials/notes.md` -> Section 6*
-
-> Your answer here...
-
----
-
-**Q10: In a parser that returns `uint32_t`, what checks are required to reject empty strings and values outside range?**  
-*Hint: see `../materials/notes.md` -> Sections 5 and 7*
+**Q8: When should a loop counter be typed as `size_t` rather than `int32_t`? State the deciding criterion and identify one hazard that `size_t` introduces for descending loops.**  
 
 > Your answer here...

@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. Why is `count++` not thread-safe?  
-   *Hint: it expands into read-modify-write steps that can interleave.*  
-   > TODO: write your answer here.
+**Q1: Why is `count++` not thread-safe, even on a modern x86 CPU?**  
 
-2. What happens if you hold a mutex while doing file I/O?  
-   *Hint: all worker threads serialize behind slow operations.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What is the C11 equivalent of `std::mutex`?  
-   *Hint: look at `<threads.h>` mutex type.*  
-   > TODO: write your answer here.
+---
 
-4. Why might `thrd_create` fail?  
-   *Hint: resource limits, OS constraints, or invalid arguments.*  
-   > TODO: write your answer here.
+**Q2: In the shared-index work-queue pattern, why is file I/O performed outside the mutex lock?**  
 
-5. If threads print to stdout at the same time, what happens to the output?  
-   *Hint: writes can interleave and become non-deterministic.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why is the shared-index work-queue pattern useful for parallel scans?  
-   *Hint: dynamic load balancing across files with uneven scan costs.*  
-   > TODO: write your answer here.
+---
 
-7. Why should main thread join all workers before trusting final total?  
-   *Hint: without join, computation may still be in progress.*  
-   > TODO: write your answer here.
+**Q3: What is returned by `thrd_create` on failure, and what two distinct failure reasons exist?**  
 
-8. What is the tradeoff between mutex counters and atomics for this task?  
-   *Hint: simplicity vs contention/performance and memory-order complexity.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: What is the consequence of reading the final `total` before calling `thrd_join` on all workers?**  
+
+> Your answer here...
+
+---
+
+**Q5: Why does a data race on a plain `int` constitute undefined behaviour in C11, not just a "possible wrong value"?**  
+
+> Your answer here...
+
+---
+
+**Q6: Describe the tradeoff between using `mtx_t` and `_Atomic long` for accumulating the match total across threads.**  
+
+> Your answer here...
+
+---
+
+**Q7: If you launch 8 threads over 8 files of wildly different sizes, why does the shared-index pattern outperform static range partitioning?**  
+
+> Your answer here...
+
+---
+
+**Q8: A colleague removes `mtx_destroy` at cleanup, arguing "the process exits anyway." Under what realistic scenario does this cause a real bug?**  
+
+> Your answer here...
+
+---

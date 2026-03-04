@@ -8,6 +8,11 @@ measured optimization with before/after data.
 Day 6 of the project. This day focuses on measurement discipline:
 measure first, optimize second, then report results.
 
+## Project continuity (required)
+
+Copy your passing Day 26 implementation into `day27/solution/` before benchmarking.
+Benchmark and optimize the same cumulative codebase you have built so far.
+
 ## Task (45-60 min)
 - Build and run `gen_fixture` to generate a 1M-line dataset.
 - Run benchmark 5 times and record median wall-clock time.

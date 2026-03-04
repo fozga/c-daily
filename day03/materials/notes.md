@@ -42,9 +42,12 @@ C objects can have different storage durations:
 
 - **Automatic (stack-like):** local variables inside a block/function; lifetime ends at block exit.
 - **Static:** global variables and `static` locals; lifetime is entire program.
-- **Allocated (heap):** created via allocation functions; lifetime until explicitly released.
+- **Allocated (heap):** created via allocation functions (`malloc`/`calloc`/`realloc`); lifetime until explicitly released with `free`.
+- **Thread (C11):** objects declared `_Thread_local`; lifetime spans one thread. Rarely needed at this level but worth knowing exists.
 
-A pointer is only valid while the pointed object is alive. Returning a pointer to a local automatic variable is undefined behavior because that object dies when the function returns.
+A pointer is only valid while the pointed object is alive. A pointer that outlives its pointee is called a **dangling pointer**. Accessing memory through a dangling pointer is undefined behavior (UB); the program may crash, silently read stale data, or appear to work depending on stack state.
+
+Returning a pointer to a local automatic variable is a classic dangling-pointer mistake: that object dies when the function returns.
 
 ### Example
 
@@ -74,9 +77,9 @@ int* good_ptr_static(void) {
 
 Aliasing means two pointers may refer to overlapping memory. If the compiler must assume aliasing, optimization opportunities shrink.
 
-`restrict` (C99) is a promise: for the lifetime of that restricted pointer, the object is accessed only through that pointer (and derived values). If you violate the promise, behavior is undefined.
+`restrict` (C99) is a promise to the compiler: for the lifetime of that restricted pointer, the object it points to is accessed only through that pointer (and pointers derived from it). Violating this promise is undefined behavior — the compiler may generate incorrect code that silently produces wrong results, because it assumed non-aliasing for optimization purposes.
 
-This is useful for functions like copy/transform where source and destination must not overlap.
+This is useful for functions like copy/transform where source and destination must not overlap. The standard library's `memcpy` is declared with `restrict` parameters for exactly this reason; `memmove` is not, and is safe for overlapping regions.
 
 ### Example
 

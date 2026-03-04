@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. What does `fgets` do when it reads exactly `buf_size - 1` characters and there are more characters remaining on the line?  
-   *Hint: line continuation remains in stream for next read.*  
-   > TODO: write your answer here.
+**Q1: `fgets` fills a 4096-byte buffer but the line is 5000 bytes long. What exactly is left in the stream after the first call, and what does your scanner do on the next iteration?**
 
-2. Why should matching output go to stdout but error messages go to stderr?  
-   *Hint: keep data stream clean for redirection/pipelines.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. When does POSIX grep NOT print the filename prefix?  
-   *Hint: single input stream behavior.*  
-   > TODO: write your answer here.
+---
 
-4. How do you detect EOF vs an I/O error using `fgets`?  
-   *Hint: inspect `feof()` and `ferror()` after NULL return.*  
-   > TODO: write your answer here.
+**Q2: A user runs `mini-grep "error" app.log > matches.txt`. If diagnostic messages go to stdout, what problem does this cause? What is the fix?**
 
-5. Why should you strip the trailing newline from a line before matching?  
-   *Hint: newline is input formatting, not semantic content in matcher rules.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why should line numbers increment per line read, not per match?  
-   *Hint: output line number must reflect original file position.*  
-   > TODO: write your answer here.
+---
 
-7. Why design scanner API around `FILE*` rather than filenames directly?  
-   *Hint: same function can process stdin and opened files uniformly.*  
-   > TODO: write your answer here.
+**Q3: mini-grep is invoked with two files: `mini-grep "foo" a.txt b.txt`. The first match is on line 3 of `a.txt`. What does the output line look like without `-n`, and what does it look like with `-n`?**
 
-8. What should scanner return on I/O error, and why?  
-   *Hint: caller needs explicit failure signal separate from 0 matches.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: `fgets` returns `NULL` after scanning a file. How do you tell whether it stopped due to EOF or an I/O error, and why does the distinction matter for mini-grep's exit code?**
+
+> Your answer here...
+
+---
+
+**Q5: Pattern `"done"` must match a line containing `"done"` but not fail on `"done\n"` (raw line from fgets). Describe the exact stripping idiom and why two separate checks are needed for CRLF files.**
+
+> Your answer here...
+
+---
+
+**Q6: A file has 100 lines; only lines 7, 42, and 99 match. If line numbers are printed, what are the correct numbers, and what goes wrong if you only increment the counter on match?**
+
+> Your answer here...
+
+---
+
+**Q7: `scanner_run` takes `FILE *fp` rather than a `const char *filename` to open internally. What does this design choice enable that a filename-based API cannot provide as cleanly?**
+
+> Your answer here...
+
+---
+
+**Q8: `scanner_run` returns `-1` on I/O error and `0` or `1` on clean completion. Why can't the caller just check the match count to detect an I/O problem?**
+
+> Your answer here...
+
+---

@@ -82,6 +82,54 @@ For an array of `record_t`, cast like:
 - `const record_t* ra = (const record_t*)a;`
 - `const record_t* rb = (const record_t*)b;`
 
+### Example
+
+```c
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int    id;
+    char   name[32];
+    double score;
+} record_t;
+
+/* Comparator: ascending by id, safe against signed overflow */
+static int cmp_by_id(const void *a, const void *b) {
+    const record_t *ra = (const record_t *)a;
+    const record_t *rb = (const record_t *)b;
+    if (ra->id < rb->id) return -1;
+    if (ra->id > rb->id) return  1;
+    return 0;
+}
+
+/* Comparator: ascending by name using strcmp */
+static int cmp_by_name(const void *a, const void *b) {
+    const record_t *ra = (const record_t *)a;
+    const record_t *rb = (const record_t *)b;
+    return strcmp(ra->name, rb->name);
+}
+
+void example(record_t *arr, size_t n) {
+    /* Sort in-place by id */
+    qsort(arr, n, sizeof(record_t), cmp_by_id);
+
+    /* Binary search — array MUST be sorted by the same order first */
+    record_t key = { .id = 42 };
+    record_t *found = bsearch(&key, arr, n, sizeof(record_t), cmp_by_id);
+    if (found) {
+        /* use found->name, found->score, etc. */
+    }
+
+    /* Re-sort by name, then search by name */
+    qsort(arr, n, sizeof(record_t), cmp_by_name);
+    record_t nkey;
+    strncpy(nkey.name, "Alice", sizeof(nkey.name));
+    record_t *nfound = bsearch(&nkey, arr, n, sizeof(record_t), cmp_by_name);
+    (void)nfound;
+}
+```
+
 ### Safety tips
 
 - Handle ties consistently.

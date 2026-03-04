@@ -142,6 +142,74 @@ Defensive programming means checking preconditions and failing predictably inste
 
 > **C vs C++:** C++ abstractions can encode some invariants in types; C relies more heavily on clear docs + tests to enforce contracts.
 
+## 6) `atoi` vs `strtol`: why `atoi` is unsuitable for production input
+
+`atoi(s)` converts a string to `int` but provides no error signal:
+
+- returns `0` for both `"0"` and for `""` and for `"garbage"` — caller cannot distinguish valid zero from failure.
+- has no overflow detection; out-of-range input produces implementation-defined behavior.
+
+`strtol` and `strtoul` are the correct alternatives:
+
+```c
+#include <errno.h>
+#include <stdlib.h>
+#include <limits.h>
+
+int parse_int(const char* s, int* out) {
+    if (!s || !out) return -1;
+    errno = 0;
+    char* end = NULL;
+    long v = strtol(s, &end, 10);
+    if (end == s)         return -1; /* no digits consumed */
+    if (*end != '\0')     return -1; /* trailing garbage */
+    if (errno == ERANGE)  return -1; /* out of long range */
+    if (v < INT_MIN || v > INT_MAX) return -1; /* out of int range */
+    *out = (int)v;
+    return 0;
+}
+```
+
+Key points: check `end == s` for empty/non-numeric input; check `*end != '\0'` for trailing junk; check `errno` for range; then validate the `long` fits in `int`.
+
+### Common mistakes
+
+- Using `atoi` for any input that could be invalid or user-supplied.
+- Checking only `errno` but not `end == s` (empty string returns 0 with `errno` still 0).
+- Treating trailing whitespace in `"42 "` as valid without an explicit policy.
+
+> **C vs C++:** C++17 `std::from_chars` provides a single, safe, locale-independent API with explicit error codes. In C, the multi-step `strtol` idiom must be written out each time.
+
+## 7) Surfacing errors to users: `strerror` and `perror`
+
+`errno` values encode technical error categories. To produce human-readable text:
+
+- `strerror(errno)` returns a pointer to a locale-specific description string. The string is valid until the next call to `strerror`.
+- `perror("prefix")` writes `"prefix: <errno description>\n"` to `stderr` automatically.
+
+```c
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+
+FILE* f = fopen("data.bin", "rb");
+if (!f) {
+    fprintf(stderr, "open failed: %s\n", strerror(errno));
+    /* or equivalently: perror("open failed"); */
+    return -1;
+}
+```
+
+Use these only immediately after the failing system call, before any intervening call might overwrite `errno`.
+
+### Common mistakes
+
+- Calling `strerror` or `perror` after another function has already changed `errno`.
+- Storing the `strerror` return pointer across calls (it may be overwritten).
+- Using `perror` when `stderr` is unavailable (e.g., daemon processes); prefer `strerror` with a logger instead.
+
+> **C vs C++:** C++ `std::system_error` wraps `errno` in an exception with message text. In C, always capture `errno` into a local variable immediately if you need it after additional calls.
+
 ---
 
 Practical rule for today: every failure path should be testable and deterministic. If a caller cannot reliably branch on your API result, the contract is incomplete.

@@ -17,9 +17,18 @@ Shift operators:
 - `<<` left shift
 - `>>` right shift
 
-Use unsigned integers for bit manipulation whenever possible. Right-shifting
-signed values can be implementation-defined (arithmetic vs logical behavior),
-and signed overflow is undefined.
+Use unsigned integers for bit manipulation whenever possible:
+
+- **Right-shifting a signed integer** may produce either arithmetic (sign-bit
+  fill) or logical (zero-fill) behavior — the C standard says the result is
+  implementation-defined when the value is negative.
+- **Left-shifting into or past the sign bit** of a signed integer is
+  undefined behavior (UB) — the compiler is free to produce any result.
+- **Signed integer overflow** is also undefined behavior (UB) — unlike
+  unsigned overflow, which wraps modulo 2ⁿ.
+
+Declaring bit-manipulation variables as `uint32_t` or `uint64_t` eliminates
+all three hazards at once.
 
 ## 3) Bit mask pattern
 
@@ -43,19 +52,52 @@ with a mask at `bit_offset`.
 
 ## 5) Operations with masks
 
-Set bit:
-- `x |= mask`
+### Example — all four operations in context
 
-Clear bit:
-- `x &= ~mask`
+```c
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <assert.h>
 
-Toggle bit:
-- `x ^= mask`
+#define BITS_PER_BLOCK  64
 
-Test bit:
-- `(x & mask) != 0`
+typedef struct {
+    uint64_t *blocks;
+    size_t    num_bits;
+    size_t    num_blocks;
+} bitset_t;
 
-These operations update one bit without disturbing other bits.
+static inline size_t block_index(size_t bit) { return bit / BITS_PER_BLOCK; }
+static inline size_t bit_offset (size_t bit) { return bit % BITS_PER_BLOCK; }
+
+void bitset_set(bitset_t *bs, size_t bit) {
+    assert(bit < bs->num_bits);
+    bs->blocks[block_index(bit)] |= (1ULL << bit_offset(bit));   /* OR: set */
+}
+
+void bitset_clear(bitset_t *bs, size_t bit) {
+    assert(bit < bs->num_bits);
+    bs->blocks[block_index(bit)] &= ~(1ULL << bit_offset(bit));  /* AND NOT: clear */
+}
+
+void bitset_toggle(bitset_t *bs, size_t bit) {
+    assert(bit < bs->num_bits);
+    bs->blocks[block_index(bit)] ^= (1ULL << bit_offset(bit));   /* XOR: flip */
+}
+
+bool bitset_test(const bitset_t *bs, size_t bit) {
+    assert(bit < bs->num_bits);
+    return (bs->blocks[block_index(bit)] & (1ULL << bit_offset(bit))) != 0;
+}
+```
+
+Key points:
+- `1ULL` ensures the shift operand is a 64-bit unsigned value; `1 << 63`
+  would be undefined behavior (UB) on a platform where `int` is 32 bits.
+- Each operation touches exactly one bit and leaves all others unchanged.
+- `assert` enforces bounds before any pointer arithmetic, turning an out-of-
+  bounds access (which would be UB) into a clean, diagnosable abort.
 
 ## Common mistakes
 

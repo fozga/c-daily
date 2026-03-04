@@ -245,7 +245,7 @@ Overhead is expected (~1.5-2x slowdown and roughly ~2x memory), acceptable for t
 ### Example
 
 ```bash
-gcc -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror -fsanitize=address util.c tests.c -o test_runner_asan -fsanitize=address
+gcc -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror -fsanitize=address util.c tests.c -o test_runner_asan
 ./test_runner_asan
 ```
 
@@ -294,3 +294,46 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./test_runn
 - Accepting leak summaries without reading stack traces to find ownership bugs.
 
 > **C vs C++:** In C there is no destructor-based automatic cleanup, so explicit ownership discipline is essential and leak risk is higher.
+
+## 8) GDB basics
+
+GDB (GNU Debugger) lets you run a program under controlled conditions, pause execution, inspect state, and step through code line by line. It relies on debug symbols produced by `-g`.
+
+Core workflow:
+
+1. Start the binary under GDB: `gdb ./test_runner`.
+2. Set a breakpoint before the code of interest: `break util_reverse_string` or `break main.c:14`.
+3. Run the program: `run` (optionally followed by command-line arguments).
+4. When execution pauses, inspect locals: `print x`, `info locals`.
+5. Step one source line (enter function calls): `step`.
+6. Step over one source line (skip function body): `next`.
+7. Continue to next breakpoint: `continue`.
+8. Print a backtrace: `backtrace` (or `bt`).
+9. Quit: `quit`.
+
+GDB also supports watching memory (`watch`), conditional breakpoints (`break f if x == 0`), and examining raw memory (`x/8xb ptr`).
+
+### Example
+
+```bash
+# Build with debug symbols
+gcc -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror util.c tests.c -o test_runner
+
+# Start GDB
+gdb ./test_runner
+(gdb) break util_reverse_string
+(gdb) run
+(gdb) info locals
+(gdb) print s
+(gdb) next
+(gdb) backtrace
+(gdb) quit
+```
+
+### Common mistakes
+
+- Forgetting to rebuild with `-g` before launching GDB (stale binary shows wrong lines).
+- Stepping into library internals instead of using `next` to stay in your own code.
+- Not setting a breakpoint and accidentally running the program to completion.
+
+> **C vs C++:** GDB commands are the same for C and C++. C++ adds `info vtbl` and demangled names, but the core workflow is identical.

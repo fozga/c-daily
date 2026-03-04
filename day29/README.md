@@ -8,6 +8,11 @@ Day 8 of the project. Instead of scanning files one by one, we use worker
 threads. Each worker pulls the next file from a shared queue and contributes to
 a global match counter.
 
+## Project continuity (required)
+
+Copy your passing Day 28 implementation into `day29/solution/` first.
+Add threading on top of the same cumulative mini-grep codebase.
+
 ## Task (45-60 min)
 - Review `parallel_scanner.h`.
 - Implement thread dispatch in `parallel_scanner.c` with `<threads.h>`:

@@ -35,6 +35,43 @@ Use it to print and verify:
 
 Combined with `sizeof`, it gives a concrete view of memory layout.
 
+### Example
+
+```c
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+
+/* Poorly ordered: compiler will insert 3 bytes of padding after 'flags' */
+typedef struct {
+    uint8_t  flags;     /* offset 0, size 1                              */
+    /* 3 bytes padding inserted here to align 'id' to 4-byte boundary   */
+    uint32_t id;        /* offset 4, size 4                              */
+    uint16_t score;     /* offset 8, size 2                              */
+    /* 2 bytes tail padding to keep array stride aligned to 4 bytes     */
+} record_bad_t;         /* sizeof == 12, but only 7 bytes are your data  */
+
+/* Well ordered: widest fields first — no internal padding needed        */
+typedef struct {
+    uint32_t id;        /* offset 0, size 4  */
+    uint16_t score;     /* offset 4, size 2  */
+    uint8_t  flags;     /* offset 6, size 1  */
+    /* 1 byte tail padding (struct align == 4) */
+} record_good_t;        /* sizeof == 8                                   */
+
+void print_layout(void) {
+    printf("record_bad_t:  sizeof=%zu\n", sizeof(record_bad_t));
+    printf("  flags  @ offset %zu\n", offsetof(record_bad_t, flags));
+    printf("  id     @ offset %zu\n", offsetof(record_bad_t, id));
+    printf("  score  @ offset %zu\n", offsetof(record_bad_t, score));
+
+    printf("record_good_t: sizeof=%zu\n", sizeof(record_good_t));
+    printf("  id     @ offset %zu\n", offsetof(record_good_t, id));
+    printf("  score  @ offset %zu\n", offsetof(record_good_t, score));
+    printf("  flags  @ offset %zu\n", offsetof(record_good_t, flags));
+}
+```
+
 ## 4) Reordering fields to minimize padding
 
 A common strategy:
@@ -65,8 +102,16 @@ Compile-time assertions can enforce layout invariants:
 
 This catches accidental regressions early in CI/builds.
 
-Example idea:
-- `_Static_assert(sizeof(my_struct) == 8, "unexpected layout");`
+```c
+/* Enforce the layout contract so any accidental struct change fails the build */
+_Static_assert(sizeof(record_good_t) == 8,  "record_good_t: size changed");
+_Static_assert(offsetof(record_good_t, id)    == 0, "id must be at byte 0");
+_Static_assert(offsetof(record_good_t, score) == 4, "score must be at byte 4");
+_Static_assert(offsetof(record_good_t, flags) == 6, "flags must be at byte 6");
+```
+
+Place these assertions in the `.c` file alongside the struct definition so they
+fire as soon as the layout is touched.
 
 ## Common mistakes
 

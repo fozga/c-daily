@@ -13,56 +13,48 @@ make clean
 
 ## Answers
 
-**Q1: What happens when you use `sizeof` on an array parameter inside a function?**  
-*Hint: see `../materials/notes.md` -> Section 2*
+**Q1: A helper function `size_t count_elems(int arr[]) { return sizeof(arr) / sizeof(arr[0]); }` always returns `2` on a 64-bit system where `sizeof(int)==4`, regardless of how many elements were passed. Explain the two language rules that combine to produce this result.**  
 
-> 
+> Your answer here...
 
 ---
 
-**Q2: What is the exact relationship between `p[i]` and `*(p + i)` in C?**  
-*Hint: see `../materials/notes.md` -> Section 4*
+**Q2: You are writing a copy function that reads `n` bytes from `src` starting at offset `cursor`. Before the read, you check `cursor + n > cap`. Under what arithmetic condition does this check itself contain a bug, and what is the correct way to write it?**  
 
-> 
+> Your answer here...
 
 ---
 
 **Q3: When you add an integer `k` to pointer `T* p`, what unit does `k` represent?**  
-*Hint: see `../materials/notes.md` -> Section 3*
 
-> 
+> Your answer here...
 
 ---
 
 **Q4: What type is produced when you subtract two pointers into the same array?**  
-*Hint: see `../materials/notes.md` -> Section 3*
 
-> 
+> Your answer here...
 
 ---
 
 **Q5: Why must buffer length always be passed alongside a pointer in C APIs?**  
-*Hint: see `../materials/notes.md` -> Sections 1 and 5*
 
-> 
+> Your answer here...
 
 ---
 
 **Q6: Give one common off-by-one mistake when reading from a fixed buffer and explain its consequence.**  
-*Hint: see `../materials/notes.md` -> Section 5*
 
-> 
+> Your answer here...
 
 ---
 
 **Q7: Why is `sizeof(ptr) / sizeof(ptr[0])` usually wrong inside a function that takes `int* ptr`?**  
-*Hint: see `../materials/notes.md` -> Sections 1 and 2*
 
-> 
+> Your answer here...
 
 ---
 
 **Q8: How do raw C arrays/pointers differ from C++ `std::span` regarding size awareness and bounds discipline?**  
-*Hint: see `../materials/notes.md` -> C vs C++ callouts across sections*
 
-> 
+> Your answer here...

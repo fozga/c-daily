@@ -13,34 +13,50 @@ make clean
 
 ## Answers
 
-1. Why is a ring buffer better than moving array elements down when reading?  
-   *Hint: compare algorithmic complexity and memory traffic.*  
-   > TODO: write your answer here.
+**Q1: Explain why a ring buffer with `head == tail` cannot simultaneously represent "full" and "empty" without additional information. What are the two standard solutions, and what is the tradeoff of each?**  
 
-2. How do you distinguish between "full" and "empty" in a ring buffer without a count variable?  
-   *Hint: empty-slot pattern uses different conditions for head/tail.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. If an array has size 16, how many useful elements can the "one empty slot" ring buffer hold?  
-   *Hint: one slot is intentionally reserved.*  
-   > TODO: write your answer here.
+---
 
-4. What is the bitwise equivalent of `x % 32`?  
-   *Hint: 32 is a power of two, so use a mask.*  
-   > TODO: write your answer here.
+**Q2: With `RB_CAPACITY = 8`, trace `head` and `tail` through: push A, push B, push C, pop, push D, pop, pop, push E. What is the state of the buffer after each operation? At what point, if any, is it full?**  
 
-5. What happens if the producer pushes data faster than the consumer pops it?  
-   *Hint: eventually the buffer reaches full condition and pushes fail or overwrite.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why must head and tail wrap around with modulo logic?  
-   *Hint: array size is fixed but stream is conceptually unbounded.*  
-   > TODO: write your answer here.
+---
 
-7. What bug appears if `rb_push` writes data before checking full condition?  
-   *Hint: unread bytes may be overwritten.*  
-   > TODO: write your answer here.
+**Q3: Why must `rb_push` check `rb_full` *before* writing to `buf[head]`, rather than after? Describe the exact data-corruption scenario if the check is omitted.**  
 
-8. Why is FIFO order important for streaming interfaces like UART?  
-   *Hint: message byte ordering must remain stable end-to-end.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: Rewrite `head = (head + 1) % 32` as a bitwise expression and prove the two are equivalent for all non-negative `head`.**  
+
+> Your answer here...
+
+---
+
+**Q5: An ISR calls `rb_push` while the main loop concurrently calls `rb_pop`. The buffer uses plain (non-atomic) `size_t` indexes. Describe the race condition and name two mitigation strategies.**  
+
+> Your answer here...
+
+---
+
+**Q6: A developer sizes the ring buffer at exactly the number of bytes they expect the ISR to produce in one burst. After running the system, they observe dropped bytes. What invariant did they violate, and how should they resize the buffer?**  
+
+> Your answer here...
+
+---
+
+**Q7: Why do `rb_push` and `rb_pop` both run in O(1) time regardless of how many bytes are currently stored? Contrast this with a queue implemented as a `memmove`-shifted array.**  
+
+> Your answer here...
+
+---
+
+**Q8: A UART ring buffer holds 255 bytes (`RB_CAPACITY = 256`, one-empty-slot rule). The baud rate is 115200 bps (≈ 11,520 bytes/s). If the main loop processes bytes at 10,000 bytes/s, how long until the buffer overflows from a continuous stream? What design change would prevent data loss?**  
+
+> Your answer here...
+
+---

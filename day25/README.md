@@ -10,6 +10,11 @@ Day 4 of the project. You now add an error-reporting layer:
 - continue processing remaining files
 - return correct final exit code based on outcomes
 
+## Project continuity (required)
+
+Copy your passing Day 24 implementation into `day25/solution/` first.
+Carry forward all prior behavior (`cli.c`, `cli.h`, `main.c`, `matcher.c`, `matcher.h`, `scanner.c`, `scanner.h`), then add diagnostics and exit-code hardening.
+
 ## Specification
 
 - On `fopen` failure: print  

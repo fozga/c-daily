@@ -9,34 +9,50 @@
 
 ## Answers
 
-1. Why is `scanf("%s", buf)` dangerous?  
-   *Hint: think about missing width limits and buffer boundaries.*  
-   > TODO: write your answer here.
+**Q1: Why does `scanf("%s", buf)` without a width specifier constitute a buffer overflow vulnerability, even when used in a controlled environment?**  
 
-2. Why must you set `errno = 0` before calling `strtol`?  
-   *Hint: `errno` persists from prior library calls.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. How do you detect that `strtol` consumed all characters (no trailing garbage)?  
-   *Hint: inspect `endptr` after conversion.*  
-   > TODO: write your answer here.
+---
 
-4. What does `fgets` do with the newline character at the end of a line?  
-   *Hint: consider whether the newline fits in the destination buffer.*  
-   > TODO: write your answer here.
+**Q2: Walk through every check the safe `strtol` pattern requires in order. What bug does each check catch that the previous checks do not?**  
 
-5. What is the difference between `feof` and `ferror`?  
-   *Hint: EOF is normal stream exhaustion; I/O error is not.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why is parsing full lines first usually better than token-by-token stdin scanning?  
-   *Hint: think control flow, validation quality, and error recovery.*  
-   > TODO: write your answer here.
+---
 
-7. What checks are needed before narrowing `strtol` output into `int32_t`?  
-   *Hint: range-check against target type limits after conversion.*  
-   > TODO: write your answer here.
+**Q3: A parser calls `strtol` and the return value is `LONG_MAX` with `errno == ERANGE`. The input string was `"99999999999999999999"`. What exactly went wrong, and how do you surface this as a distinct error code to the caller?**  
 
-8. How should malformed CSV-like lines be handled in a robust parser?  
-   *Hint: return explicit error codes for each failure class.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: `fgets` was called with `buf[64]` and a 63-character line followed by `\n`. Describe exactly what `buf` contains afterward. How does the answer change if the line is 64 characters with no `\n`?**  
+
+> Your answer here...
+
+---
+
+**Q5: After `fgets` returns NULL, how do you distinguish a normal end-of-file from an actual I/O error, and why does that distinction matter for error reporting?**  
+
+> Your answer here...
+
+---
+
+**Q6: Your parser accepts `"42abc"` as the valid integer `42` because `strtol` stops at `'a'`. Which step of the safe conversion sequence catches this, and what should be returned to the caller?**  
+
+> Your answer here...
+
+---
+
+**Q7: Explain why returning a single generic `PARSE_ERROR` for all malformed cases is bad design. Give two examples of failure modes that a caller would need to distinguish.**  
+
+> Your answer here...
+
+---
+
+**Q8: Compare using `sscanf` directly versus the `fgets`-then-tokenize-then-`strtol` approach for parsing `"id,name,score"` records. When would `sscanf` be acceptable and when does it fail you?**  
+
+> Your answer here...
+
+---

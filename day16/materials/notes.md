@@ -62,6 +62,47 @@ In practice, use both in CI/debug workflows.
 ASan adds runtime overhead (often 1.5x-3x) and memory overhead. It is intended
 for testing/debug builds, not usually production binaries.
 
+## 6) Example ASan report
+
+### heap-use-after-free
+
+```
+==12345==ERROR: AddressSanitizer: heap-use-after-free on address 0x602000000010
+READ of size 4 at 0x602000000010 thread T0
+    #0 0x55555555528a in process_item faulty_heap.c:47
+    #1 0x5555555553f1 in run_workflow faulty_heap.c:91
+    #2 0x555555555510 in main faulty_heap.c:120
+
+0x602000000010 was freed by thread T0 here:
+    #0 0x7ffff7b9df20 in __interceptor_free
+    #1 0x555555555201 in cleanup_item faulty_heap.c:31
+
+previously allocated by thread T0 here:
+    #0 0x7ffff7b9de80 in __interceptor_malloc
+    #1 0x555555555180 in create_item faulty_heap.c:15
+```
+
+### Reading the report
+
+- **Error class**: `heap-use-after-free` — freed memory is accessed again.
+- **Access descriptor**: `READ of size 4` — a 4-byte read from an already-freed
+  address. The address (`0x602000000010`) sits in a poisoned redzone or
+  quarantine region ASan maintains after `free`.
+- **Crash stack** (first block): the invalid access is in `process_item` at
+  `faulty_heap.c:47`. This is the immediate fault site.
+- **Freed stack** ("was freed by"): `cleanup_item` at line 31 freed the object.
+  This is the `free()` call that ended the allocation's lifetime.
+- **Allocation stack** ("previously allocated by"): `create_item` at line 15
+  originally allocated the memory.
+
+Diagnosis workflow:
+
+1. Find the crash stack → understand *what* was accessed.
+2. Check the freed stack → find *when* the object's lifetime ended.
+3. Check the allocation stack → understand the object's origin and expected
+   owner.
+4. The root cause is usually a lifetime mismatch: a pointer outlived its object.
+
 ## Common mistakes
 
 - Forgetting `-fno-omit-frame-pointer` and getting poor traces.

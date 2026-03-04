@@ -8,6 +8,11 @@ single-character wildcard support.
 This is Day 2 of the mini-grep project. Today you build the matcher engine.
 Tomorrow (Day 24) you connect it to file traversal.
 
+## Project continuity (required)
+
+Before coding, copy your passing Day 22 implementation into `day23/solution/`.
+Keep building on that codebase from this point onward; do not restart from scratch.
+
 ## Specification
 
 - Literal search: pattern `foo` matches any line containing substring `foo`.

@@ -6,39 +6,57 @@ From this directory:
 
 ```bash
 make test
+make asan
+make valgrind
 make clean
 ```
 
 ## Answers
 
-1. What is the difference between a lock-free queue and a mutex-based queue?  
-   *Hint: compare blocking behavior, contention handling, and overhead.*  
-   > TODO: write your answer here.
+**Q1: Why must the producer write `data[head]` before calling `atomic_store(&q->head, next)`? What does the consumer observe if the order is reversed?**  
 
-2. Why must the producer write the data to the array before updating the atomic head index?  
-   *Hint: think about what the consumer sees after observing new head value.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-3. What does compiler reordering mean in the context of multithreading?  
-   *Hint: optimization may change operation order unless synchronization prevents it.*  
-   > TODO: write your answer here.
+---
 
-4. How do you check if an SPSC ring buffer is full?  
-   *Hint: use next producer position and compare with tail.*  
-   > TODO: write your answer here.
+**Q2: The SPSC queue is safe without a mutex because each index is owned by exactly one thread. Explain precisely what breaks if a second producer thread calls `sq_push` concurrently.**  
 
-5. What is the default memory order used by standard C11 atomic operations?  
-   *Hint: default `atomic_load/atomic_store` variants are the strongest ordering.*  
-   > TODO: write your answer here.
+> Your answer here...
 
-6. Why is one slot often intentionally left unused in a ring buffer?  
-   *Hint: this simplifies full-vs-empty detection.*  
-   > TODO: write your answer here.
+---
 
-7. Why is this queue design called Single-Producer Single-Consumer?  
-   *Hint: identify which thread owns each write-side index.*  
-   > TODO: write your answer here.
+**Q3: `atomic_store` with default `memory_order_seq_cst` is used instead of a plain assignment. Name two distinct sources of reordering it prevents (one compiler, one CPU).**  
 
-8. What kind of bug can happen if head or tail are plain `size_t` instead of atomic?  
-   *Hint: think data races and stale reads across cores.*  
-   > TODO: write your answer here.
+> Your answer here...
+
+---
+
+**Q4: With `CAPACITY = 8`, trace the values of `head` and `tail` through a sequence of: push A, push B, pop, push C, pop, pop. What is the final state?**  
+
+> Your answer here...
+
+---
+
+**Q5: A stretch-goal upgrade replaces `memory_order_seq_cst` with `memory_order_release` on stores and `memory_order_acquire` on loads. Why is this sufficient for SPSC correctness, and what does it gain on ARM hardware?**  
+
+> Your answer here...
+
+---
+
+**Q6: If `head` and `tail` are declared as plain `size_t` instead of `_Atomic size_t`, what specific undefined behaviour clause of C11 applies, and what can the compiler legally do?**  
+
+> Your answer here...
+
+---
+
+**Q7: Compare the uncontended latency of an `atomic_fetch_add` vs acquiring a `mtx_t`. When is the atomic version *slower* in practice?**  
+
+> Your answer here...
+
+---
+
+**Q8: A developer changes `CAPACITY` to 1 to save memory. Without looking at the code, predict what will always happen on the first `sq_push` call. Explain the invariant that causes this.**  
+
+> Your answer here...
+
+---

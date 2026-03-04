@@ -1,80 +1,161 @@
-# Day 32 Notes - C11 Threads and Atomics
+# Day 32 Notes - C11 Threads and Atomics (SPSC Queue)
 
-## C11 Atomics vs Mutexes
+## 1) Atomics vs mutexes
 
-`<stdatomic.h>` provides atomic operations that can update shared variables
-without using a lock. A mutex serializes access by blocking competing threads.
+`<stdatomic.h>` provides operations that the CPU executes atomically — no
+other thread can observe a half-completed state.  A mutex achieves the same
+*logical* exclusion, but by blocking competing threads at the OS scheduler
+level.
 
-Use lock-free approaches when:
-- the data path is small and highly contended
-- you need low latency and minimal context-switch overhead
-- you can keep the algorithm simple and provably correct
+| Property | Atomic operation | Mutex |
+|---|---|---|
+| Blocking | No (spin or single instruction) | Yes (OS context switch under contention) |
+| Latency (uncontended) | ~1 ns (single CPU instruction) | ~20-100 ns (syscall overhead) |
+| Latency (contended) | Spin loop (wastes CPU) | OS-managed sleep (yields CPU) |
+| Suitable state size | One scalar | Arbitrary struct / multi-step update |
+| Correctness risk | Memory ordering bugs are subtle | Easier to reason about |
+
+Use atomics when:
+
+- the shared state is a single scalar (index, counter, flag)
+- latency is critical
+- the algorithm can be proved correct in terms of memory ordering
 
 Use mutexes when:
-- shared state is complex or multi-step
-- correctness and maintainability are more important than micro-optimizations
-- lock-free invariants would become difficult to reason about
 
-Mutexes can trigger kernel scheduling and context switches under contention.
-Atomic operations are CPU-level synchronization primitives and can be much
-faster for simple coordination patterns.
+- shared state involves multiple variables that must change together
+- correctness is more important than micro-optimisation
+- you cannot afford to reason about relaxed memory orders
 
-## `_Atomic` syntax
+## 2) `_Atomic` syntax and standard operations
 
-C11 supports:
-- `_Atomic int x;`
-- `atomic_int y;` (typedef-style convenience)
+C11 supports two equivalent syntaxes:
 
-For queue indexes, using `_Atomic size_t` is natural:
-- producer updates `head`
-- consumer updates `tail`
-- each side reads the opposite index atomically
+```c
+_Atomic size_t head;      /* keyword style    */
+atomic_size_t  tail;      /* typedef style    */
+```
 
-## SPSC Ring Buffer Mechanism
+Standard operations:
 
-For a queue with `capacity = N`, store elements in `data[0..N-1]`.
+```c
+size_t h = atomic_load(&head);          /* acquire a consistent snapshot */
+atomic_store(&tail, new_tail);          /* publish a new value           */
+size_t old = atomic_fetch_add(&head, 1); /* read-modify-write, returns old */
+```
 
-Producer:
-1. Read `head` and `tail`.
-2. Compute `next_head = (head + 1) % N`.
-3. If `next_head == tail`, queue is full.
-4. Write value to `data[head]`.
-5. Publish `head = next_head`.
+By default these use `memory_order_seq_cst` (sequential consistency) — the
+strongest and safest ordering model.
 
-Consumer:
-1. Read `head` and `tail`.
-2. If `head == tail`, queue is empty.
-3. Read value from `data[tail]`.
-4. Publish `tail = (tail + 1) % N`.
+## 3) SPSC ring buffer: data structure
 
-## Empty and Full Conditions
+A Single-Producer Single-Consumer (SPSC) queue needs no mutex because exactly
+one thread owns each index: the **producer** owns `head`, the **consumer**
+owns `tail`.
 
-- Empty: `head == tail`
-- Full: `(head + 1) % capacity == tail`
+```c
+#define CAPACITY 16  /* must be > 1; usable slots = CAPACITY - 1 */
 
-This design intentionally keeps one slot unused to distinguish full from empty
-without adding extra counters.
+typedef struct {
+    int           data[CAPACITY];
+    _Atomic size_t head;   /* written only by producer */
+    _Atomic size_t tail;   /* written only by consumer */
+} SpscQueue;
+```
 
-## Memory Ordering Basics
+The one-empty-slot rule:
 
-Why not plain `head = new_head`?
-- Compilers may reorder operations for optimization.
-- CPUs may observe memory operations in different orders across cores.
+- **Empty**: `head == tail`
+- **Full**: `(head + 1) % CAPACITY == tail`
 
-Atomic operations establish the required inter-thread visibility guarantees.
-For this day, default sequential consistency (`memory_order_seq_cst`) is used,
-which is the strictest and easiest model to reason about.
+With capacity N, the maximum number of live items is N − 1.
+
+## 4) Producer and consumer operations
+
+### Example: sq_push and sq_pop
+
+```c
+#include <stdatomic.h>
+#include <stdbool.h>
+
+bool sq_push(SpscQueue *q, int value) {
+    size_t h    = atomic_load(&q->head);
+    size_t next = (h + 1) % CAPACITY;
+
+    if (next == atomic_load(&q->tail))
+        return false;   /* full — caller must retry or discard */
+
+    q->data[h] = value;                /* write payload BEFORE advancing head */
+    atomic_store(&q->head, next);      /* publish new head to consumer */
+    return true;
+}
+
+bool sq_pop(SpscQueue *q, int *out) {
+    size_t t = atomic_load(&q->tail);
+
+    if (atomic_load(&q->head) == t)
+        return false;   /* empty */
+
+    *out = q->data[t];                     /* read payload BEFORE advancing tail */
+    atomic_store(&q->tail, (t + 1) % CAPACITY);
+    return true;
+}
+```
+
+**Critical ordering rule**: the producer must write `data[h]` *before*
+updating `head`.  If it advanced `head` first, the consumer could observe the
+new head value and read uninitialised or stale data.
+
+## 5) Memory ordering: why plain assignments are unsafe
+
+On modern CPUs and with compiler optimisations enabled, memory operations can
+be reordered:
+
+- The compiler may move a `head = next` assignment before `data[h] = value`
+  if it sees no data dependency between them.
+- CPUs (non-x86 architectures) have weakly-ordered memory models and may
+  commit writes to caches in a different order than the program source.
+
+`atomic_store` with the default `memory_order_seq_cst` prevents both forms of
+reordering.  For the stretch goal, `memory_order_release` on stores and
+`memory_order_acquire` on loads are sufficient for SPSC — they are faster on
+ARM/POWER while still providing the required visibility guarantee.
+
+## 6) Why this is SPSC only
+
+The algorithm relies on each index being modified by exactly one thread:
+
+- Producer reads and writes `head`.
+- Consumer reads and writes `tail`.
+- Each also *reads* the other's index to detect full/empty — but never
+  *writes* it.
+
+If two producers both attempted to call `sq_push` concurrently, they would
+race on the `head` read-modify-write and could both claim the same slot, then
+overwrite each other's data.  This design is **not** safe for MPMC use without
+additional synchronisation.
 
 ## Common mistakes
 
-- Advancing `head` before writing payload into `data[head]`.
-- Reading from `data[tail]` before confirming queue is non-empty.
-- Using non-atomic shared indexes in multithreaded code.
-- Forgetting modulo wrap-around when incrementing indexes.
-- Using multi-producer or multi-consumer patterns with this SPSC design.
+- Advancing `head` before writing `data[head]` (consumer reads garbage).
+- Reading from `data[tail]` before confirming the queue is non-empty.
+- Using plain (non-atomic) `size_t` for `head`/`tail` in a multithreaded
+  binary — this is a data race and undefined behaviour.
+- Forgetting the modulo wrap-around when incrementing indexes.
+- Using this SPSC design with multiple producers or multiple consumers.
+- Over-optimising to relaxed memory orders before verifying correctness
+  under sequential consistency first.
 
 ## C vs C++ callout
 
-C++ offers `std::atomic<T>` and higher-level concurrency utilities, but the
-core memory-order reasoning is the same. In C, the primitives are explicit in
-`<stdatomic.h>`, which helps build a clear mental model of synchronization.
+| Aspect | C (`<stdatomic.h>`) | C++ (`<atomic>`) |
+|---|---|---|
+| Type | `_Atomic T` / `atomic_int` | `std::atomic<T>` |
+| Load/store | `atomic_load` / `atomic_store` | `.load()` / `.store()` |
+| Fetch-add | `atomic_fetch_add` | `.fetch_add()` |
+| Explicit ordering | `atomic_load_explicit(..., order)` | `.load(order)` |
+
+The underlying CPU instructions and memory-ordering semantics are identical.
+C++ provides a cleaner class-based interface, but C's explicit function-call
+style makes the memory-ordering intent more visible — which is a real
+advantage when learning these concepts.

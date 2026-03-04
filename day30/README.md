@@ -8,6 +8,11 @@ retrospective.
 Final day of the mini-grep project. Real tools must survive hostile input:
 binary streams, invalid flags, huge patterns, and oversized argument lists.
 
+## Project continuity (required)
+
+Copy your passing Day 29 implementation into `day30/solution/` before stress testing.
+This final pass validates the cumulative project built from Days 22-29.
+
 ## Task (45-60 min)
 - Compile final mini-grep binary (using integrated Day 22-29 sources).
 - Run `bash solution/stress_test.sh ./mini-grep`.

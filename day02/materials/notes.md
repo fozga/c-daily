@@ -2,6 +2,17 @@
 
 This note is designed for a developer who already knows C++ but needs solid C instincts around integer behavior, conversions, and undefined behavior (UB). Day 02 is about debugging numeric code that compiles but is semantically wrong at boundaries.
 
+## C vs C++ for this day
+
+> In C++, signed overflow is still undefined behavior, but modern C++ code often uses abstractions that hide raw conversion edges. In C, those edges are your direct responsibility.
+
+- C does not provide type-safe numeric wrappers by default, so implicit promotions and signedness conversions are easier to miss.
+- C-style casts are blunt tools; prefer explicit range checks before converting between signed and unsigned domains.
+- C codebases often pass raw sizes and indices (`size_t`) across layers, so mixed-sign comparisons need deliberate handling.
+- C++ libraries may reduce direct exposure to overflow-prone arithmetic, while C requires explicit guard logic in your own code.
+
+Treat every cross-type arithmetic expression as a boundary decision: validate assumptions, then convert.
+
 ## 1) Integer types in practice
 
 C integer widths are implementation-defined within standard constraints. Do not assume `int` is always 32-bit or `long` is always 64-bit. On common Linux x86_64 systems, `int` is 32-bit and `long` is 64-bit, but portability means verifying assumptions.
@@ -28,6 +39,8 @@ int main(void) {
 - Assuming `long` has the same width on every platform.
 - Using plain `int` for serialized on-disk/network fields.
 - Mixing ABI-sized types and fixed-width types without explicit conversion boundaries.
+
+> **C vs C++:** C and C++ share the same fixed-width header (`<stdint.h>` / `<cstdint>`), but C++ programmers often rely on `auto` and templates that abstract away widths. In C, you choose and see every type explicitly, so width discipline must be habitual.
 
 ## 2) Integer promotions + usual arithmetic conversions
 
@@ -61,6 +74,8 @@ On many platforms this prints `a >= b` because `a` is converted to an unsigned v
 - Assuming `uint8_t` arithmetic stays 8-bit.
 - Ignoring signedness diagnostics and trusting visual intuition.
 
+> **C vs C++:** Promotion and conversion rules are identical in C and C++, but C++ overloaded operators and implicit constructors add another layer of implicit conversions on top. Pure C keeps conversion to the arithmetic rules, making them easier to audit once you know them.
+
 ## 3) Signed overflow is UB; unsigned wraparound is defined
 
 In C, signed integer overflow is undefined behavior. The compiler may optimize assuming it never happens. Unsigned arithmetic wraps modulo 2^N by definition.
@@ -74,21 +89,33 @@ This distinction matters because “it wrapped on my machine” does not make si
 #include <limits.h>
 
 int32_t bad_add(int32_t a, int32_t b) {
-    /* UB when overflow occurs */
+    /* UB when overflow occurs - do not write this */
     return a + b;
 }
 
 uint32_t wrapped_add(uint32_t a, uint32_t b) {
-    /* Defined modulo 2^32 */
+    /* Defined: wraps modulo 2^32 */
     return a + b;
+}
+
+/* Safe pattern: check range BEFORE the addition */
+int safe_add_i32(int32_t a, int32_t b, int32_t* result) {
+    if (b > 0 && a > INT32_MAX - b) return -1; /* would overflow */
+    if (b < 0 && a < INT32_MIN - b) return -1; /* would underflow */
+    *result = a + b;
+    return 0;
 }
 ```
 
+The key rule: rearrange the inequality so the potentially-overflowing addition never appears in the condition itself. If `a > INT32_MAX - b`, then `a + b` would exceed `INT32_MAX`; test that relationship using subtraction instead, which is safe because the right-hand side stays in range.
+
 ### Common mistakes
 
-- Detecting signed overflow by first doing overflowing signed arithmetic.
-- Assuming optimizer preserves overflow-check logic built on UB expressions.
-- Treating signed and unsigned overflow semantics as interchangeable.
+- Detecting signed overflow by first doing the overflowing addition (`if (a + b < a)`).
+- Assuming the optimizer preserves overflow-check logic built on UB expressions.
+- Using compiler-specific built-ins (`__builtin_add_overflow`) without wrapping them in a portable fallback.
+
+> **C vs C++:** Signed overflow is UB in both languages. However, C++ containers and algorithms often hide unsigned arithmetic behind iterators and `.size()`, whereas C code uses raw `size_t` arithmetic directly, so the hazard is more visible and more frequent.
 
 ## 4) `size_t` and signed/unsigned hazards
 
@@ -117,6 +144,8 @@ void bad_loop(size_t n) {
 - Writing `for (size_t i = n - 1; i >= 0; --i)` without special handling.
 - Comparing `int i` directly with `size_t n` in loop conditions.
 - Assuming `a - b` with unsigned operands can express negative results.
+
+> **C vs C++:** `size_t` hazards exist in C++ as well, but C++ offers `std::ssize` (C++20) and signed-size helpers. In C, you must build your own safe-subtraction utilities or compare before subtracting.
 
 ## 5) Defensive patterns for numeric code
 
@@ -148,6 +177,8 @@ int safe_to_i32(int64_t x, int32_t* out) {
 - Using “temporary unsigned arithmetic” when negative values are valid.
 - Letting conversion points spread across code instead of centralizing them.
 
+> **C vs C++:** C++ `static_cast` and `narrow_cast` templates make conversion sites greppable. In C, cast syntax `(int32_t)x` is easy to miss in reviews; centralizing conversions into named helper functions serves the same purpose.
+
 ## 6) Reading compiler warnings as a debugging tool
 
 Warnings are early bug reports from the compiler. For Day 02, expect warnings around conversions and signedness interactions.
@@ -172,6 +203,8 @@ gcc -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror -Wconversion -Wsign-convers
 - Silencing warnings without understanding the data-flow bug.
 - Disabling strict warnings because they are "too noisy".
 - Fixing warning text mechanically instead of fixing the semantic root cause.
+
+> **C vs C++:** The same GCC/Clang warning flags work for both languages. C codebases tend to trigger more signedness and conversion warnings because there are no templates or strong-typedef wrappers to absorb implicit conversions.
 
 ## 7) Debugging workflow for Day 02
 
@@ -198,5 +231,7 @@ make valgrind
 - Changing too many lines at once, then losing causal clarity.
 - Declaring success after one fixed test without regression coverage.
 - Skipping sanitizer passes after logic changes.
+
+> **C vs C++:** The debug-fix loop is the same in both languages. The key C-specific habit is to treat every compiler warning about conversions as a potential data-corruption bug, since C has no type-safe wrappers to catch these at compile time.
 
 Do not guess numeric behavior. Make conversions explicit, validate ranges, and let warnings guide you.

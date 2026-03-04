@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror -lpthread
+CFLAGS = -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror
+LDLIBS = -lpthread
 ASAN_FLAGS = -fsanitize=address
 
 TEST_BIN = test_runner
@@ -12,13 +13,13 @@ test: $(TEST_BIN)
 	./$(TEST_BIN)
 
 $(TEST_BIN): $(SRCS) parallel_scanner.h
-	$(CC) $(CFLAGS) $(SRCS) -o $(TEST_BIN)
+	$(CC) $(CFLAGS) $(SRCS) -o $(TEST_BIN) $(LDLIBS)
 
 asan: $(ASAN_BIN)
 	./$(ASAN_BIN)
 
 $(ASAN_BIN): $(SRCS) parallel_scanner.h
-	$(CC) $(CFLAGS) $(ASAN_FLAGS) $(SRCS) -o $(ASAN_BIN) $(ASAN_FLAGS)
+	$(CC) $(CFLAGS) $(ASAN_FLAGS) $(SRCS) -o $(ASAN_BIN) $(ASAN_FLAGS) $(LDLIBS)
 
 valgrind: $(TEST_BIN)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TEST_BIN)
