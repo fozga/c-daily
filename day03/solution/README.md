@@ -1,10 +1,8 @@
-# Solution Workspace - Day 03
+# Day 03 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+Implement all API functions declared in `pointers.h` inside `pointers.c`, then validate behavior with tests and memory tools.
 
-## Local Commands
-
-From this directory:
+## Build and test
 
 ```bash
 make test
@@ -13,16 +11,58 @@ make valgrind
 make clean
 ```
 
-From repository root:
+## Answers
 
-```bash
-make day=03 test
-make day=03 asan
-make day=03 valgrind
-make day=03 clean
-```
+**Q1: Why is returning a pointer to a local variable undefined behavior in C?**  
+*Hint: see `../materials/notes.md` -> Section 2*
 
-## Expected Minimum
+> 
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+---
+
+**Q2: What is the difference between `const int* p` and `int* const p`?**  
+*Hint: see `../materials/notes.md` -> Section 5*
+
+> 
+
+---
+
+**Q3: What happens if you pass `NULL` to a function that unconditionally dereferences that pointer?**  
+*Hint: see `../materials/notes.md` -> Section 5*
+
+> 
+
+---
+
+**Q4: What does `restrict` tell the compiler, and what happens if the promise is violated?**  
+*Hint: see `../materials/notes.md` -> Section 3*
+
+> 
+
+---
+
+**Q5: How does pointer arithmetic scale with underlying type size? Give an `int*` example.**  
+*Hint: see `../materials/notes.md` -> Section 4*
+
+> 
+
+---
+
+**Q6: Why can two pointers to the same array element create optimization constraints for the compiler?**  
+*Hint: see `../materials/notes.md` -> Section 3*
+
+> 
+
+---
+
+**Q7: In C, what are the three storage durations you use most often, and how do they affect pointer validity?**  
+*Hint: see `../materials/notes.md` -> Section 2*
+
+> 
+
+---
+
+**Q8: C++ references cannot be reseated; C pointers can. How does this influence API design and defensive checks in C?**  
+*Hint: see `../materials/notes.md` -> Section 1*
+
+> 

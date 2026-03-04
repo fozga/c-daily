@@ -1,34 +1,36 @@
-# Day 03
+# Day 03 - Pointers, objects, and lifetime
 
-## Goal of the Day
+## 1) Title + Goal
 
-Practice core C skills for Day 03.
+Today you will practice address semantics and object lifetime in C by implementing pointer-based utilities without relying on C++ references. The goal is to reason precisely about what each pointer can point to, for how long, and under what preconditions.
 
-## Task
+## 2) What you will build
 
-Implement today's exercise in `solution/`.
+A small set of safe pointer manipulation utilities in C:
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+- swap two integers by pointer
+- reverse an integer array in place
+- return a pointer to the maximum element
+- copy a slice of integers with non-overlap assumptions
 
-## Acceptance Criteria
+## 3) Task (45-60 min)
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+1. Review `pointers.h` to understand API contracts and return codes.
+2. Implement all functions in `pointers.c`.
+3. Handle `NULL` pointers defensively where required by contract.
+4. Run `make test` until all assertions pass.
+5. Run `make asan` and `make valgrind` to verify memory safety (no out-of-bounds reads/writes).
 
-## What to Submit
+## 4) Acceptance criteria
 
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
+- `make test` passes (0 warnings, all tests green).
+- Clean ASan and Valgrind runs.
+- Answers to all knowledge questions provided in `solution/README.md`.
 
-## Check Questions
+## 5) Knowledge check
 
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+There are 8 questions in `solution/README.md` to answer.
+
+## 6) Stretch goals
+
+- Implement a generic memory swap (`void* a, void* b, size_t size`) without using a VLA.
