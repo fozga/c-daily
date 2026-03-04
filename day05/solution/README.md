@@ -1,10 +1,8 @@
-# Solution Workspace - Day 05
+# Day 05 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+Implement the `strview` API in `strview.c` using only pointer+length logic. Do not rely on NUL-termination in algorithm loops.
 
-## Local Commands
-
-From this directory:
+## Build and test
 
 ```bash
 make test
@@ -13,16 +11,51 @@ make valgrind
 make clean
 ```
 
-From repository root:
+## Answers
 
-```bash
-make day=05 test
-make day=05 asan
-make day=05 valgrind
-make day=05 clean
-```
+**Q1: Why is `strlen()` an O(N) operation?**  
+*Hint: see `../materials/notes.md` -> Section 2*
 
-## Expected Minimum
+> 
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+---
+
+**Q2: What happens if you pass a string without a `\0` to a standard C function expecting a C-string?**  
+*Hint: see `../materials/notes.md` -> Sections 1 and 2*
+
+> 
+
+---
+
+**Q3: Why is a String View struct typically faster for taking substrings than a standard C-string approach?**  
+*Hint: see `../materials/notes.md` -> Section 3*
+
+> 
+
+---
+
+**Q4: How do you calculate the length of a substring given a start pointer and an end pointer?**  
+*Hint: see `../materials/notes.md` -> Section 5*
+
+> 
+
+---
+
+**Q5: Why is `printf("%s", view.data)` dangerous for generic `strview` data?**  
+*Hint: see `../materials/notes.md` -> Sections 1 and 3*
+
+> 
+
+---
+
+**Q6: Conceptually, why is view equality closer to `memcmp` than `strcmp`?**  
+*Hint: see `../materials/notes.md` -> Section 4*
+
+> 
+
+---
+
+**Q7: In a C API, why must pointer lifetime and view length both be part of the contract?**  
+*Hint: see `../materials/notes.md` -> Sections 3 and 5*
+
+> 
