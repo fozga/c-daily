@@ -11,6 +11,8 @@
 *.exe
 app
 program
+test_runner
+test_runner_asan
 
 # Build directories
 build/
