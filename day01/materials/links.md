@@ -1,6 +1,7 @@
-# Links - Day 01
+# Day 01 Links
 
-- GCC manual: https://gcc.gnu.org/onlinedocs/
-- C reference: https://en.cppreference.com/w/c
-- Valgrind docs: https://valgrind.org/docs/manual/quick-start.html
-- GNU Make manual: https://www.gnu.org/software/make/manual/make.html
+- GCC Warning Options (`-Wall`, `-Wextra`, `-Wpedantic`): https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
+- GNU Make manual (basics): https://www.gnu.org/software/make/manual/make.html
+- Valgrind Memcheck Quick Start Guide: https://valgrind.org/docs/manual/quick-start.html
+- AddressSanitizer documentation (Clang): https://clang.llvm.org/docs/AddressSanitizer.html
+- AddressSanitizer options (GCC instrumentation): https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html
