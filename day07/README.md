@@ -1,34 +1,32 @@
-# Day 07
+# Day 07 - API contracts and error model
 
-## Goal of the Day
+## 1) Title + Goal
 
-Practice core C skills for Day 07.
+Today you will design robust C APIs with explicit contracts using return codes and `errno`. The goal is to make failure behavior predictable, testable, and safe for callers.
 
-## Task
+## 2) What you will refactor/build
 
-Implement today's exercise in `solution/`.
+You will build a text parsing utility that handles malformed input through specific custom error codes and uses standard `errno` values for system-style failures (such as range overflow).
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## 3) Task (45-60 min)
 
-## Acceptance Criteria
+1. Review `parser.h` to understand the exact error contract for each function.
+2. Implement parsing logic in `parser.c`.
+3. Use `<errno.h>` codes (`EINVAL`, `ERANGE`) where specified, and return your own enum codes where appropriate.
+4. Run `make test` to verify both successful parsing and failure paths.
+5. Run `make asan` and `make valgrind`.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## 4) Acceptance criteria
 
-## What to Submit
+- `make test` passes (0 warnings).
+- Functions correctly set `errno` on specific failures.
+- Functions never crash on `NULL` inputs when contract requires an error return.
+- Answers to all knowledge questions are provided in `solution/README.md`.
 
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
+## 5) Knowledge check
 
-## Check Questions
+There are 7 questions in `solution/README.md` to answer.
 
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## 6) Stretch goals
+
+- Implement `const char* parser_strerror(parser_err_t err)` that maps custom enum errors to readable strings.
