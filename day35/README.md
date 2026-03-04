@@ -1,34 +1,32 @@
-# Day 30
+# Day 35 - Callbacks and Event Dispatchers
 
-## Goal of the Day
+## Goal
+Wire up an event dispatcher handling simulated asynchronous events.
 
-Practice core C skills for Day 30.
+## Context
+The final day! You will build an event dispatcher that routes simulated
+hardware interrupts or UI events to registered callback functions, passing a
+`void* user_ctx` to maintain state.
 
-## Task
+## Task (45-60 min)
+- Review `dispatcher.h`.
+- Implement `dispatch_register` to save a function pointer and context in an
+  array.
+- Implement `dispatch_fire_event` to iterate the array and call the functions
+  that match the `event_id`.
+- Implement a mechanism where a specific callback sets a global
+  `volatile sig_atomic_t` flag to signal the main loop to exit.
+- Run `make test`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Callbacks receive the correct `user_ctx`.
+- Answers to all knowledge questions provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Course completion
+Congratulations on finishing the full 35-day C drill. You just covered core C
+systems fundamentals, debugging workflows, low-level data structures, and
+concurrency patterns used in production environments.

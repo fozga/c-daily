@@ -1,43 +1,16 @@
-CC := gcc
+CC = gcc
+CFLAGS = -std=c11 -O2 -g -Wall -Wextra -Wpedantic -Werror -lpthread
 
-STD := -std=c11
-WARN := -Wall -Wextra -Wpedantic -Werror
-DEBUG := -O0 -g
-ASAN := -fsanitize=address
+TEST_BIN = test_runner
+SRCS = spsc_queue.c tests.c
 
-CFLAGS := $(STD) $(WARN) $(DEBUG)
-LDFLAGS :=
+.PHONY: test clean
 
-SRCS := $(wildcard *.c)
-BIN := app
+test: $(TEST_BIN)
+	./$(TEST_BIN)
 
-.PHONY: all test asan valgrind clean
-
-all: test
-
-test:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	./$(BIN)
-endif
-
-asan:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(ASAN) $(SRCS) -o $(BIN)-asan $(LDFLAGS) $(ASAN)
-	./$(BIN)-asan
-endif
-
-valgrind:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(BIN)
-endif
+$(TEST_BIN): $(SRCS) spsc_queue.h
+	$(CC) $(CFLAGS) $(SRCS) -o $(TEST_BIN)
 
 clean:
-	rm -f $(BIN) $(BIN)-asan *.o
+	rm -f $(TEST_BIN) *.o

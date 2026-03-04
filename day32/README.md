@@ -1,34 +1,29 @@
-# Day 30
+# Day 32 - C11 Threads and Atomics
 
-## Goal of the Day
+## Goal
+Implement a lock-free Single-Producer Single-Consumer queue using C11 atomics.
 
-Practice core C skills for Day 30.
+## Context
+Modern C provides `<stdatomic.h>` for lock-free programming. You will build a
+Single-Producer Single-Consumer queue, a common pattern for sending data from
+an ISR/hardware thread to a worker thread.
 
-## Task
+## Task (45-60 min)
+- Review `spsc_queue.h`. Notice the `_Atomic` variables for head and tail.
+- Implement `sq_push` and `sq_pop` in `spsc_queue.c` using ring-buffer logic
+  (modulo capacity).
+- Use `atomic_load` and `atomic_store` for safe thread communication.
+- Run `make test`. The test spawns 2 threads doing 100,000 operations.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- No data races or deadlocks.
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Change the atomic operations to use explicit memory models
+  (`memory_order_acquire` and `memory_order_release`) instead of sequential
+  consistency.

@@ -1,28 +1,32 @@
-# Solution Workspace - Day 30
+# Day 30 Retrospective
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- Build your final `mini-grep` binary first.
+- Run: `bash stress_test.sh ./mini-grep`
 
-From this directory:
+## Retrospective template
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1) What was the hardest C bug to track down?  
+> TODO
 
-From repository root:
+2) How did Valgrind/ASan change your debugging workflow?  
+> TODO
 
-```bash
-make day=30 test
-make day=30 asan
-make day=30 valgrind
-make day=30 clean
-```
+3) What C feature do you miss most from C++?  
+> TODO
 
-## Expected Minimum
+4) What C feature do you prefer over C++?  
+> TODO
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5) Which test from `stress_test.sh` was most valuable and why?  
+> TODO
+
+6) What would you refactor first if you had one more day?  
+> TODO
+
+7) What reliability principle will you carry to future projects?  
+> TODO
+
+8) Course completion note (congratulations!):  
+> You finished the 35-day C drill. Great work!
