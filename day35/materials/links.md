@@ -1,6 +1,19 @@
-# Links - Day 30
+# Day 35 - Curated links
 
-- GCC manual: https://gcc.gnu.org/onlinedocs/
-- C reference: https://en.cppreference.com/w/c
-- Valgrind docs: https://valgrind.org/docs/manual/quick-start.html
-- GNU Make manual: https://www.gnu.org/software/make/manual/make.html
+1. `sig_atomic_t` reference  
+   https://en.cppreference.com/w/c/program/sig_atomic_t
+
+2. `volatile` qualifier in C  
+   https://en.cppreference.com/w/c/language/volatile
+
+3. Signal safety and async-signal-safe functions  
+   https://man7.org/linux/man-pages/man7/signal-safety.7.html
+
+4. Function pointers and callbacks in C  
+   https://en.cppreference.com/w/c/language/pointer
+
+5. Observer pattern overview  
+   https://en.wikipedia.org/wiki/Observer_pattern
+
+6. Embedded interrupt design best practices  
+   https://www.embedded.com/interrupt-handling-best-practices/

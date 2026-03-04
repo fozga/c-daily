@@ -1,34 +1,28 @@
-# Day 18
+# Day 18 - Singly linked list from scratch
 
-## Goal of the Day
+## Goal
+Implement a robust singly linked list API with clear ownership and safe edge
+case handling.
 
-Practice core C skills for Day 18.
+## What you will build
+A linked list storing integer values with proper node allocation, traversal,
+lookup, removal, and cleanup semantics.
 
-## Task
+## Task (45-60 min)
+- Review `slist.h`.
+- Implement all `slist_` functions in `slist.c`.
+- Handle edge cases: empty list, single-node list, head/tail/middle removals.
+- Run `make test` until all tests pass.
+- Run `make asan` and `make valgrind`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with 0 warnings.
+- Clean ASan and Valgrind runs.
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+Implement `slist_reverse(slist_t* list)` by relinking nodes in-place without
+allocating new nodes.

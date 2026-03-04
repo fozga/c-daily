@@ -1,34 +1,33 @@
-# Day 23
+# Day 23 - Match engine v1
 
-## Goal of the Day
+## Goal
+Implement the mini-grep matching core for literal substring search and `.`
+single-character wildcard support.
 
-Practice core C skills for Day 23.
+## Context
+This is Day 2 of the mini-grep project. Today you build the matcher engine.
+Tomorrow (Day 24) you connect it to file traversal.
 
-## Task
+## Specification
 
-Implement today's exercise in `solution/`.
+- Literal search: pattern `foo` matches any line containing substring `foo`.
+- Dot wildcard: `.` in pattern matches any single character.
+- `-i` mode: case-insensitive ASCII matching (without mutating original strings).
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Task (45-60 min)
+- Review `matcher.h`.
+- Implement `matcher_init`, `matcher_match_line`, and `matcher_destroy`.
+- Run `make test`.
+- Run `make asan`.
 
-## Acceptance Criteria
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Clean ASan run.
+- Matching behavior is correct for literals and wildcard patterns.
+- Answers to all knowledge questions are provided.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Add support for `^` start-anchor (pattern must match at beginning of line).

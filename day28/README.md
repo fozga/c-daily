@@ -1,34 +1,35 @@
-# Day 28
+# Day 28 - Project series I: regex-lite sets
 
-## Goal of the Day
+## Goal
+Extend matcher syntax with bracket character classes and escapes while preserving
+existing Day 23 behavior.
 
-Practice core C skills for Day 28.
+## Context
+Day 7 of the project and Part 1 of the 3-part series (Days 28-30). You evolve
+the pattern language without breaking prior functionality.
 
-## Task
+## New syntax
 
-Implement today's exercise in `solution/`.
+- `[abc]` matches one char from set `{a,b,c}`
+- `[a-z]` matches ASCII range
+- `[^abc]` negated class
+- escapes: `\n`, `\t`, `\\`
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Task (45-60 min)
+- Review `matcher2.h`.
+- Implement matcher logic for literals, `.`, classes, negation, and escapes.
+- Ensure `-i` case-insensitive mode applies to range/class comparisons too.
+- Run `make test`.
+- Run `make asan`.
 
-## Acceptance Criteria
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Clean ASan run.
+- All Day 23 behavior still passes unchanged.
+- Answers to all knowledge questions are provided.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Support negated ranges such as `[^a-z]`.

@@ -1,0 +1,4 @@
+# ASCII only fixture (full Unicode matching is out of scope)
+cafe
+resume
+naive

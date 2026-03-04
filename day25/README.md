@@ -1,34 +1,37 @@
-# Day 25
+# Day 25 - Final project: diagnostics hardening
 
-## Goal of the Day
+## Goal
+Add robust diagnostics and exit-status mapping so mini-grep reports failures
+clearly without crashing and follows Unix-like behavior.
 
-Practice core C skills for Day 25.
+## Context
+Day 4 of the project. You now add an error-reporting layer:
+- print actionable errors to stderr
+- continue processing remaining files
+- return correct final exit code based on outcomes
 
-## Task
+## Specification
 
-Implement today's exercise in `solution/`.
+- On `fopen` failure: print  
+  `mini-grep: <filename>: <strerror(errno)>` to stderr.
+- Partial success (some files failed): exit with `1`.
+- No matches and no errors: exit with `1` (grep convention).
+- Only errors and no successful matches: exit with `2`.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Task (45-60 min)
+- Implement `diag_open_file` in `diag.c`.
+- Implement summary exit-code logic.
+- Run `make test`.
+- Run `make asan`.
 
-## Acceptance Criteria
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Clean ASan run.
+- Exit-code mapping is correct in all required scenarios.
+- Answers to all knowledge questions are provided.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Add `--silent` / `-s` flag to suppress printed diagnostics.

@@ -1,34 +1,28 @@
-# Day 29
+# Day 29 - Parallel file scanning with C11 threads
 
-## Goal of the Day
+## Goal
+Add optional parallel scanning using C11 threads and safe shared-state updates.
 
-Practice core C skills for Day 29.
+## Context
+Day 8 of the project. Instead of scanning files one by one, we use worker
+threads. Each worker pulls the next file from a shared queue and contributes to
+a global match counter.
 
-## Task
+## Task (45-60 min)
+- Review `parallel_scanner.h`.
+- Implement thread dispatch in `parallel_scanner.c` with `<threads.h>`:
+  `thrd_create`, `mtx_lock`, `mtx_unlock`, `thrd_join`.
+- Protect both shared file index and shared total counter with `mtx_t`.
+- Run `make test` and verify exact total.
+- Run `make asan`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with 0 warnings.
+- Global match count is exactly correct every run.
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Replace mutex-protected total with `<stdatomic.h>` counter.

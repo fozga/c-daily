@@ -1,34 +1,38 @@
-# Day 24
+# Day 24 - Final project: file traversal
 
-## Goal of the Day
+## Goal
+Process stdin and files uniformly through a scanner pipeline and print matches in
+the correct output format.
 
-Practice core C skills for Day 24.
+## Context
+Day 3 of the project. You now connect the Day 23 matcher to real input streams.
+`scanner_run` handles one `FILE*`; higher-level CLI loops over file arguments.
 
-## Task
+## Specification
 
-Implement today's exercise in `solution/`.
+Output format:
+- Single file or stdin: `<line_content>`
+- Multiple files: `<filename>:<line_content>`
+- With `-n`: add line number
+  - stdin/single file: `<line_number>:<line_content>`
+  - with filename: `<filename>:<line_number>:<line_content>`
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Task (45-60 min)
+- Review `scanner.h`.
+- Implement `scanner_run` using `fgets` (never `scanf`).
+- Strip trailing newline before matching and printing.
+- Integrate with `matcher_t` from Day 23 (copied into solution).
+- Run `make test`.
+- Run `make asan`.
 
-## Acceptance Criteria
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Clean ASan and Valgrind runs.
+- Output formatting matches spec exactly.
+- Answers to all knowledge questions are provided.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Support very long lines (>4096) with a growable buffer.

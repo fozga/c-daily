@@ -1,34 +1,41 @@
-# Day 22
+# Day 22 - mini-grep CLI skeleton
 
-## Goal of the Day
+## Goal
+Build the CLI foundation for mini-grep: argument parsing, option validation,
+and reliable exit code behavior.
 
-Practice core C skills for Day 22.
+## Context
+This is Day 1 of a 9-day project. By Day 30, you will have a hardened mini-grep
+tool. Today you build the CLI interface only - no file scanning or matching yet.
 
-## Task
+## Specification
 
-Implement today's exercise in `solution/`.
+Usage:
+- `mini-grep [OPTIONS] PATTERN [FILE...]`
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+Options:
+- `-n` : print line numbers in output
+- `-i` : case-insensitive matching (ASCII only)
+- `-h` : print usage and exit with code 0
 
-## Acceptance Criteria
+Rules:
+- If no FILE is given, parse result should indicate stdin mode (`files_count=0`).
+- If PATTERN is missing, print usage and exit with code 1.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## Task (45-60 min)
+- Implement `cli_parse(argc, argv, &opts)` in `cli.c`.
+- Unknown flags must print an error to stderr and exit with code 2.
+- Run `make test`.
+- Run `make asan`.
 
-## What to Submit
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Clean ASan run.
+- `cli_parse` sets all fields correctly for valid argument combinations.
+- Answers to all knowledge questions are provided.
 
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Support `--` to explicitly end option parsing.

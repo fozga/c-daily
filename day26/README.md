@@ -1,34 +1,26 @@
-# Day 26
+# Day 26 - Test matrix for mini-grep
 
-## Goal of the Day
+## Goal
+Create an integration-test matrix with fixtures, expected outputs, and exit-code
+checks for the mini-grep project.
 
-Practice core C skills for Day 26.
+## Context
+Day 5 of the project. Today is about quality gates, not new matching features.
+You write a shell integration test script rather than C source code.
 
-## Task
+## Task (45-60 min)
+- Build mini-grep from your Day 22–25 code.
+- Review fixture files in `solution/fixtures/`.
+- Complete missing cases in `solution/test_matrix.sh`.
+- Run: `bash solution/test_matrix.sh ./mini-grep`
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- All tests in `test_matrix.sh` pass.
+- Script exits `0` on success and non-zero on failure.
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Add a BATS-based version of the integration tests.

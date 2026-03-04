@@ -1,43 +1,27 @@
-CC := gcc
+CC = gcc
+CFLAGS = -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror
 
-STD := -std=c11
-WARN := -Wall -Wextra -Wpedantic -Werror
-DEBUG := -O0 -g
-ASAN := -fsanitize=address
+BIN = mini-grep
 
-CFLAGS := $(STD) $(WARN) $(DEBUG)
-LDFLAGS :=
+# TODO: adjust source paths below to your integrated day22-25 implementation files.
+# Example integration set:
+#   ../day22/solution/main.c ../day22/solution/cli.c
+#   ../day23/solution/matcher.c
+#   ../day24/solution/scanner.c
+#   ../day25/solution/diag.c
+SRC_PATHS = \
+	../../day22/solution/main.c \
+	../../day22/solution/cli.c
 
-SRCS := $(wildcard *.c)
-BIN := app
+.PHONY: build test clean
 
-.PHONY: all test asan valgrind clean
+build: $(BIN)
 
-all: test
+$(BIN):
+	$(CC) $(CFLAGS) $(SRC_PATHS) -o $(BIN)
 
-test:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	./$(BIN)
-endif
-
-asan:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(ASAN) $(SRCS) -o $(BIN)-asan $(LDFLAGS) $(ASAN)
-	./$(BIN)-asan
-endif
-
-valgrind:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(BIN)
-endif
+test: $(BIN) test_matrix.sh
+	bash test_matrix.sh ./$(BIN)
 
 clean:
-	rm -f $(BIN) $(BIN)-asan *.o
+	rm -f $(BIN)

@@ -1,43 +1,32 @@
-CC := gcc
+CC = gcc
+CFLAGS = -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror
+ASAN_FLAGS = -fsanitize=address
 
-STD := -std=c11
-WARN := -Wall -Wextra -Wpedantic -Werror
-DEBUG := -O0 -g
-ASAN := -fsanitize=address
+TEST_BIN = test_runner
+ASAN_BIN = test_runner_asan
+APP_BIN = mini-grep
 
-CFLAGS := $(STD) $(WARN) $(DEBUG)
-LDFLAGS :=
+.PHONY: test build asan valgrind clean
 
-SRCS := $(wildcard *.c)
-BIN := app
+test: $(TEST_BIN)
+	./$(TEST_BIN)
 
-.PHONY: all test asan valgrind clean
+$(TEST_BIN): cli.c tests.c cli.h
+	$(CC) $(CFLAGS) cli.c tests.c -o $(TEST_BIN)
 
-all: test
+build: $(APP_BIN)
 
-test:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	./$(BIN)
-endif
+$(APP_BIN): cli.c main.c cli.h
+	$(CC) $(CFLAGS) cli.c main.c -o $(APP_BIN)
 
-asan:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(ASAN) $(SRCS) -o $(BIN)-asan $(LDFLAGS) $(ASAN)
-	./$(BIN)-asan
-endif
+asan: $(ASAN_BIN)
+	./$(ASAN_BIN)
 
-valgrind:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(BIN)
-endif
+$(ASAN_BIN): cli.c tests.c cli.h
+	$(CC) $(CFLAGS) $(ASAN_FLAGS) cli.c tests.c -o $(ASAN_BIN) $(ASAN_FLAGS)
+
+valgrind: $(TEST_BIN)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TEST_BIN)
 
 clean:
-	rm -f $(BIN) $(BIN)-asan *.o
+	rm -f $(TEST_BIN) $(ASAN_BIN) $(APP_BIN) *.o

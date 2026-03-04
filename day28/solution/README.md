@@ -1,28 +1,42 @@
-# Solution Workspace - Day 28
+# Day 28 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- `make test` - build and run matcher2 tests.
+- `make asan` - run tests with AddressSanitizer.
+- `make valgrind` - run tests under Valgrind.
+- `make clean` - remove generated binaries.
 
-From this directory:
+## Answers
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1. How does recursive-descent parsing work at a high level?  
+   *Hint: parse functions consume grammar constructs left-to-right.*  
+   > TODO: write your answer here.
 
-From repository root:
+2. What is the ASCII range for lowercase letters (`a-z`)?  
+   *Hint: decimal codes from `a` to `z`.*  
+   > TODO: write your answer here.
 
-```bash
-make day=28 test
-make day=28 asan
-make day=28 valgrind
-make day=28 clean
-```
+3. What makes `[^abc]` different from `[abc]` in matching logic?  
+   *Hint: inclusion vs exclusion predicate.*  
+   > TODO: write your answer here.
 
-## Expected Minimum
+4. How should your parser behave if a `[` is opened but `]` is never found?  
+   *Hint: fail safely with no crash/infinite loop.*  
+   > TODO: write your answer here.
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5. Why does backward compatibility matter even in a personal project?  
+   *Hint: existing tests/users rely on old behavior contracts.*  
+   > TODO: write your answer here.
+
+6. Why must `-i` case-folding apply to bracket ranges too?  
+   *Hint: class semantics should remain consistent with global matcher mode.*  
+   > TODO: write your answer here.
+
+7. What is the parser difference between escaped `\\n` and literal `n` in pattern text?  
+   *Hint: escape decoding transforms token meaning at runtime.*  
+   > TODO: write your answer here.
+
+8. Why should malformed patterns return "no match" instead of causing undefined behavior?  
+   *Hint: input robustness and tool reliability under bad patterns.*  
+   > TODO: write your answer here.

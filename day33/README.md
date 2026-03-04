@@ -1,34 +1,31 @@
-# Day 30
+# Day 33 - Finite State Machines in C
 
-## Goal of the Day
+## Goal
+Build a table-driven finite state machine for a TCP-like connection sequence.
 
-Practice core C skills for Day 30.
+## Context
+FSMs are the backbone of networking and embedded control. You will build a
+state machine that handles events without blocking threads.
 
-## Task
+## Task (45-60 min)
+- Review `fsm.h`. States: `CLOSED`, `LISTEN`, `SYN_RCVD`, `ESTABLISHED`.
+  Events: `CMD_LISTEN`, `RCV_SYN`, `RCV_ACK`, `CMD_CLOSE`.
+- Implement `fsm_dispatch` in `fsm.c`. Instead of a giant `switch/case`,
+  use a 2D lookup table: `Transition transitions[NUM_STATES][NUM_EVENTS]`.
+- When an event fires, look up the `next_state` and the `action_callback`.
+- Update the state and call the callback. Handle invalid transitions
+  (return error).
+- Run `make test`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- Valid event sequences execute callbacks and reach `ESTABLISHED`.
+- Invalid events (e.g. `RCV_ACK` while `CLOSED`) are safely rejected.
+- Answers to all knowledge questions provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Implement a transition logging macro that prints
+  `[FSM] State X -> Event Y -> State Z`.

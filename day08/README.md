@@ -1,34 +1,32 @@
-# Day 08
+# Day 08 - Core stdlib algorithms
 
-## Goal of the Day
+## Goal
+Implement a record sorter and lookup tool using C standard-library algorithms:
+`qsort`, `bsearch`, and function pointers.
 
-Practice core C skills for Day 08.
+## What you will build
+You will work on a small record management module operating on arrays of
+`record_t` structures. The module will sort records in-place and perform fast
+lookups using binary search.
 
-## Task
+## Task (45-60 min)
+1. Review `records.h` and understand the `record_t` structure and API.
+2. Implement comparator functions and wrapper logic in `records.c`.
+3. Implement:
+   - `records_sort_by_id`
+   - `records_sort_by_name`
+   - `records_find_by_id`
+4. Run `make test` until all tests pass.
+5. Run `make asan`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with zero warnings.
+- `make asan` completes with no sanitizer errors.
+- Answers to all knowledge questions are completed in `solution/README.md`.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 knowledge-check questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Add `records_sort_by_score_desc` for descending score order.
+- Implement a generic `records_find` that accepts a function pointer predicate.

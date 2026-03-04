@@ -1,43 +1,44 @@
-CC := gcc
+CC = gcc
+AR = ar
+CFLAGS = -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror
+ASAN_FLAGS = -fsanitize=address
 
-STD := -std=c11
-WARN := -Wall -Wextra -Wpedantic -Werror
-DEBUG := -O0 -g
-ASAN := -fsanitize=address
+LIB_NAME = libcdrills.a
+CLI_BIN = cdrills
+TEST_BIN = test_runner
+ASAN_BIN = test_runner_asan
 
-CFLAGS := $(STD) $(WARN) $(DEBUG)
-LDFLAGS :=
+# TODO: Replace placeholder sources with actual working module files from earlier days.
+# TODO: Example candidates:
+# TODO:   ../day09/solution/line_parser.c
+# TODO:   ../day10/solution/binrec.c
+# TODO:   ../day13/solution/store.c
+LIB_SRCS =
+LIB_OBJS = $(LIB_SRCS:.c=.o)
 
-SRCS := $(wildcard *.c)
-BIN := app
+.PHONY: lib test cli run asan valgrind clean
 
-.PHONY: all test asan valgrind clean
+lib: $(LIB_NAME)
 
-all: test
+$(LIB_NAME): $(LIB_OBJS)
+	$(AR) rcs $(LIB_NAME) $(LIB_OBJS)
 
-test:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	./$(BIN)
-endif
+test: lib tests.c
+	$(CC) $(CFLAGS) tests.c -L. -lcdrills -o $(TEST_BIN)
+	./$(TEST_BIN)
 
-asan:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(ASAN) $(SRCS) -o $(BIN)-asan $(LDFLAGS) $(ASAN)
-	./$(BIN)-asan
-endif
+cli: lib cli.c cdrills_lib.h
+	$(CC) $(CFLAGS) cli.c -L. -lcdrills -o $(CLI_BIN)
 
-valgrind:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(BIN)
-endif
+run: cli
+	./$(CLI_BIN) store
+
+asan: lib tests.c
+	$(CC) $(CFLAGS) $(ASAN_FLAGS) tests.c -L. -lcdrills -o $(ASAN_BIN) $(ASAN_FLAGS)
+	./$(ASAN_BIN)
+
+valgrind: test
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TEST_BIN)
 
 clean:
-	rm -f $(BIN) $(BIN)-asan *.o
+	rm -f $(CLI_BIN) $(TEST_BIN) $(ASAN_BIN) $(LIB_NAME) *.o

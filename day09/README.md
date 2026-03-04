@@ -1,34 +1,30 @@
-# Day 09
+# Day 09 - Robust text input parsing
 
-## Goal of the Day
+## Goal
+Build a robust text parser using `fgets`, `strtol`, `sscanf`, and explicit
+validation to safely read CSV-like records.
 
-Practice core C skills for Day 09.
+## What you will build
+A line parser that reads records in the form `id,name,score` from a `FILE*`
+source and reports precise error codes for malformed input.
 
-## Task
+## Task (45-60 min)
+1. Review `line_parser.h` to understand the API and error codes.
+2. Implement `lp_read_line` and `lp_parse_record` in `line_parser.c`.
+3. Never parse directly from `stdin` with `scanf`; read full lines with `fgets`.
+4. Set `errno` correctly when numeric parsing fails.
+5. Run `make test` until all tests pass.
+6. Run `make asan`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with zero warnings.
+- `make asan` is clean.
+- Malformed input lines return specific error codes (no crashes).
+- Answers to all knowledge questions are completed in `solution/README.md`.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Support optional trailing whitespace.
+- Support comment lines beginning with `#`.

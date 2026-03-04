@@ -1,28 +1,42 @@
-# Solution Workspace - Day 23
+# Day 23 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- `make test` - build and run matcher tests.
+- `make asan` - run tests with AddressSanitizer.
+- `make valgrind` - run tests under Valgrind.
+- `make clean` - remove generated binaries.
 
-From this directory:
+## Answers
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1. What is the worst-case complexity of the naive substring search algorithm?  
+   *Hint: compare every possible start position against pattern length.*  
+   > TODO: write your answer here.
 
-From repository root:
+2. Why is `tolower()` not safe for non-ASCII characters?  
+   *Hint: locale/Unicode case folding is broader than single-byte ASCII mapping.*  
+   > TODO: write your answer here.
 
-```bash
-make day=23 test
-make day=23 asan
-make day=23 valgrind
-make day=23 clean
-```
+3. Should an empty pattern match every line or no lines?  
+   *Hint: choose and justify a consistent search semantics.*  
+   > TODO: write your answer here.
 
-## Expected Minimum
+4. What does it mean to "search" vs "match" a line?  
+   *Hint: substring existence vs full-string equivalence.*  
+   > TODO: write your answer here.
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5. How do you handle the case where the pattern is longer than the line?  
+   *Hint: no valid start positions exist; return no-match safely.*  
+   > TODO: write your answer here.
+
+6. Why should wildcard `.` logic be implemented in the inner comparison loop, not preprocessed away?  
+   *Hint: matching depends on alignment at each candidate start position.*  
+   > TODO: write your answer here.
+
+7. Why cast to `unsigned char` before passing to `tolower`?  
+   *Hint: negative signed-char values are undefined for ctype macros/functions.*  
+   > TODO: write your answer here.
+
+8. Why should matcher code avoid modifying input `line` and `pattern` buffers?  
+   *Hint: ownership/const correctness and caller expectations.*  
+   > TODO: write your answer here.

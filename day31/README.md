@@ -1,34 +1,28 @@
-# Day 30
+# Day 31 - Static memory pools
 
-## Goal of the Day
+## Goal
+Build a fixed-size memory pool allocator using a static byte array and free-list
+operations in O(1), without `malloc`/`free`.
 
-Practice core C skills for Day 30.
+## Context
+Start of Week 5 systems patterns. In embedded and safety-critical contexts,
+dynamic heap allocation is often restricted due to fragmentation and
+non-deterministic timing.
 
-## Task
+## Task (45-60 min)
+- Review `mempool.h`.
+- Implement `pool_init` to divide a byte buffer into fixed blocks and link them.
+- Implement `pool_alloc` to pop from free-list (O(1)).
+- Implement `pool_free` to push back to free-list (O(1)).
+- Run `make test`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes (0 warnings).
+- `pool_alloc` and `pool_free` are O(1) (no loops in those functions).
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Validate in `pool_free` that pointer belongs to pool memory range.

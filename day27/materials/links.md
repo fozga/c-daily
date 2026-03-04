@@ -1,6 +1,19 @@
-# Links - Day 27
+# Day 27 - Curated links
 
-- GCC manual: https://gcc.gnu.org/onlinedocs/
-- C reference: https://en.cppreference.com/w/c
-- Valgrind docs: https://valgrind.org/docs/manual/quick-start.html
-- GNU Make manual: https://www.gnu.org/software/make/manual/make.html
+1. `clock_gettime(2)` man page  
+   https://man7.org/linux/man-pages/man2/clock_gettime.2.html
+
+2. GNU gprof tutorial  
+   https://sourceware.org/binutils/docs/gprof/
+
+3. Linux `perf` basics  
+   https://perf.wiki.kernel.org/index.php/Tutorial
+
+4. Benchmarking pitfalls overview  
+   https://en.wikipedia.org/wiki/Microbenchmark
+
+5. GCC optimization options  
+   https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
+
+6. C stdio buffering (`setvbuf`)  
+   https://man7.org/linux/man-pages/man3/setbuf.3.html

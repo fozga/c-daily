@@ -1,34 +1,24 @@
-# Day 30
+# Day 30 - Release polish and stress testing
 
-## Goal of the Day
+## Goal
+Finalize mini-grep with a stress pass, crash-hardening workflow, and release
+retrospective.
 
-Practice core C skills for Day 30.
+## Context
+Final day of the mini-grep project. Real tools must survive hostile input:
+binary streams, invalid flags, huge patterns, and oversized argument lists.
 
-## Task
+## Task (45-60 min)
+- Compile final mini-grep binary (using integrated Day 22-29 sources).
+- Run `bash solution/stress_test.sh ./mini-grep`.
+- If crashes occur, use ASan/GDB to locate missing validation.
+- Fix remaining reliability issues.
+- Fill retrospective in `solution/README.md`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `stress_test.sh` reports no crashes.
+- Exit codes `0/1/2` are acceptable; `139` (segfault) and `134` (abort) are not.
+- Retrospective is completed.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
-
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+- Run under Valgrind while streaming `/dev/urandom` input.

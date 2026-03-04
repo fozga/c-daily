@@ -1,34 +1,32 @@
-# Day 14
+# Day 14 - Mini library integration day
 
-## Goal of the Day
+## Goal
+Assemble previous modules into a reusable static C library with a unified API
+and a CLI consumer.
 
-Practice core C skills for Day 14.
+## What you will build
+- A static library `libcdrills.a` containing implementations from three earlier
+  days (recommended: days 09, 10, and 13 when available).
+- A CLI tool `cdrills` with at least:
+  - `parse <file>` (day09-style text parsing flow)
+  - `store` (day13-style key-value interaction demo)
 
-## Task
+## Task (45-60 min)
+1. Write the Makefile rules to archive objects into `libcdrills.a` using `ar`.
+2. Link `libcdrills.a` into both `test_runner` and `cdrills`.
+3. Implement subcommand dispatch in `cli.c`.
+4. Run `make test` (integration smoke tests) and `make run`.
+5. Run `make asan`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with zero warnings.
+- `libcdrills.a` exists after build.
+- `make asan` is clean.
+- Answers to all knowledge questions are completed in `solution/README.md`.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+Add a `make install` target that installs the library and umbrella header into
+a local `prefix/` directory.
