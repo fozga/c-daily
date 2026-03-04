@@ -1,34 +1,31 @@
-# Day 04
+# Day 04 - Arrays, decay, and pointer arithmetic
 
-## Goal of the Day
+## 1) Title + Goal
 
-Practice core C skills for Day 04.
+Today you will build a safe fixed-buffer parser while practicing array decay and pointer arithmetic in C. The goal is to traverse contiguous memory explicitly and safely, without relying on automatic bounds checks.
 
-## Task
+## 2) What you will build
 
-Implement today's exercise in `solution/`.
+You will implement a small buffer reader API that safely traverses and extracts bytes from a contiguous memory region without ever walking off the edge.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## 3) Task (45-60 min)
 
-## Acceptance Criteria
+1. Review `buffer.h` to understand parser state and API contracts.
+2. Implement the functions in `buffer.c`.
+3. Never access memory outside `[data, data + capacity)`.
+4. Run `make test` until all provided assertions pass.
+5. Run `make asan` to catch subtle off-by-one errors during traversal.
 
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
+## 4) Acceptance criteria
 
-## What to Submit
+- `make test` passes (0 warnings, all tests green).
+- Clean ASan run (no buffer overflows).
+- Answers to all knowledge questions provided in `solution/README.md`.
 
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
+## 5) Knowledge check
 
-## Check Questions
+There are 8 questions in `solution/README.md` to answer.
 
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## 6) Stretch goals
+
+- Implement a function `buf_read_until(buffer_t* b, uint8_t delimiter, uint8_t* out_arr, size_t max_len)` that copies bytes until it hits a specific value or the end of the buffer.
