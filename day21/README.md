@@ -1,34 +1,28 @@
-# Day 21
+# Day 21 - Defensive and testable C
 
-## Goal of the Day
+## Goal
+Refactor C code with defensive checks, invariants, and fault-injection seams.
 
-Practice core C skills for Day 21.
+## What you will refactor
+A simple singly linked list implementation that works in normal paths but lacks
+internal verification and allocator failure testability.
 
-## Task
+## Task (45-60 min)
+- Review `slist_defensive.c` baseline logic.
+- Replace raw `malloc` calls with `MALLOC_SEAM(size)`.
+- Use `test_set_malloc_fail_at` to simulate allocation failures in tests.
+- Implement `slist_verify_invariants(const slist_t* list)`.
+- Call `slist_verify_invariants` after every mutating function.
+- Run `make test`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes.
+- Fault injection tests prove clean behavior on OOM paths.
+- Invariant checks can detect internal corruption.
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+Implement `ASSERT_MSG(cond, msg)` that reports file/line and aborts cleanly.

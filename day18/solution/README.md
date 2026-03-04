@@ -1,28 +1,42 @@
-# Solution Workspace - Day 18
+# Day 18 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- `make test` - build and run tests.
+- `make asan` - run tests with AddressSanitizer.
+- `make valgrind` - run tests with Valgrind.
+- `make clean` - remove generated binaries.
 
-From this directory:
+## Answers
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1. Why must you declare the node struct as `struct node` rather than just an anonymous typedef?  
+   *Hint: self-referential pointers need a named struct tag.*  
+   > TODO: write your answer here.
 
-From repository root:
+2. What is the danger of iterating a list with `free(curr); curr = curr->next;`?  
+   *Hint: consider object lifetime and pointer validity after free.*  
+   > TODO: write your answer here.
 
-```bash
-make day=18 test
-make day=18 asan
-make day=18 valgrind
-make day=18 clean
-```
+3. Why is deleting the head node a special case compared to deleting a middle node?  
+   *Hint: the list's external entry pointer must be updated.*  
+   > TODO: write your answer here.
 
-## Expected Minimum
+4. What is the time complexity of appending to the tail of a singly linked list if you only store a head pointer?  
+   *Hint: think about traversal cost to find the last node.*  
+   > TODO: write your answer here.
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5. What memory issues does Valgrind report if you forget to implement `slist_destroy`?  
+   *Hint: all allocated nodes remain reachable/lost at process exit.*  
+   > TODO: write your answer here.
+
+6. Why should `slist_get_at` validate bounds before traversal?  
+   *Hint: prevent NULL dereference and undefined behavior.*  
+   > TODO: write your answer here.
+
+7. Why must count metadata be updated consistently on insert/remove?  
+   *Hint: stale count breaks API invariants and tests.*  
+   > TODO: write your answer here.
+
+8. What edge cases should always be unit-tested in list removal logic?  
+   *Hint: empty, head, tail, middle, and missing value cases.*  
+   > TODO: write your answer here.

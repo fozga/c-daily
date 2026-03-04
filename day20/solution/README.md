@@ -1,28 +1,42 @@
-# Solution Workspace - Day 20
+# Day 20 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- `make test` - build and run tests.
+- `make asan` - run tests with AddressSanitizer.
+- `make valgrind` - run tests with Valgrind.
+- `make clean` - remove generated binaries.
 
-From this directory:
+## Answers
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1. What is the difference between `&` and `&&` in C?  
+   *Hint: one is bitwise, the other is logical with short-circuit behavior.*  
+   > TODO: write your answer here.
 
-From repository root:
+2. Why should you always use unsigned types like `uint64_t` for bit manipulation?  
+   *Hint: signed shifts/overflow semantics can be implementation-defined or undefined.*  
+   > TODO: write your answer here.
 
-```bash
-make day=20 test
-make day=20 asan
-make day=20 valgrind
-make day=20 clean
-```
+3. Why is `1 << 40` a bug, and how do you fix it?  
+   *Hint: integer literal type width matters; use a 64-bit unsigned literal.*  
+   > TODO: write your answer here.
 
-## Expected Minimum
+4. What bitwise operation sets a specific bit to `1` without changing others?  
+   *Hint: use OR with a single-bit mask.*  
+   > TODO: write your answer here.
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5. What bitwise operation clears a specific bit to `0` without changing others?  
+   *Hint: combine AND with inverted mask.*  
+   > TODO: write your answer here.
+
+6. How do you compute block index and bit offset in a `uint64_t` bitset?  
+   *Hint: division and modulo by 64.*  
+   > TODO: write your answer here.
+
+7. What operation toggles a bit?  
+   *Hint: XOR flips bit value when mask bit is 1.*  
+   > TODO: write your answer here.
+
+8. Why are bounds checks essential in dynamic bitset APIs?  
+   *Hint: out-of-range indexes can corrupt unrelated memory.*  
+   > TODO: write your answer here.

@@ -1,34 +1,29 @@
-# Day 19
+# Day 19 - Hash map in pure C
 
-## Goal of the Day
+## Goal
+Implement a string-key hash map using open addressing, linear probing, and
+resize by load factor.
 
-Practice core C skills for Day 19.
+## What you will build
+A `const char* -> int` map with collision resolution by linear probing and
+automatic growth when load factor reaches threshold.
 
-## Task
+## Task (45-60 min)
+- Review `hashmap.h`.
+- Implement map operations in `hashmap.c` (FNV-1a hash is provided).
+- Handle collisions by probing forward.
+- Implement rehashing when `count >= capacity * 0.75`.
+- Run `make test`.
+- Run `make asan` and `make valgrind`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with 0 warnings.
+- Clean ASan and Valgrind runs.
+- Answers to all knowledge questions are provided.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+Implement `hashmap_remove` using tombstones for deletion without breaking probe
+chains.
