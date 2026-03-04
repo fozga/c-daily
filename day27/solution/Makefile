@@ -1,43 +1,20 @@
-CC := gcc
+CC = gcc
 
-STD := -std=c11
-WARN := -Wall -Wextra -Wpedantic -Werror
-DEBUG := -O0 -g
-ASAN := -fsanitize=address
+CFLAGS_DEBUG = -std=c11 -D_POSIX_C_SOURCE=200809L -O0 -g -Wall -Wextra -Wpedantic -Werror
+CFLAGS_RELEASE = -std=c11 -D_POSIX_C_SOURCE=200809L -O2 -Wall -Wextra
 
-CFLAGS := $(STD) $(WARN) $(DEBUG)
-LDFLAGS :=
+.PHONY: gen bench run_bench clean
 
-SRCS := $(wildcard *.c)
-BIN := app
+gen: gen_fixture
 
-.PHONY: all test asan valgrind clean
+gen_fixture: gen_fixture.c
+	$(CC) $(CFLAGS_DEBUG) gen_fixture.c -o gen_fixture
 
-all: test
+bench: bench.c
+	$(CC) $(CFLAGS_RELEASE) bench.c -o bench
 
-test:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	./$(BIN)
-endif
-
-asan:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(ASAN) $(SRCS) -o $(BIN)-asan $(LDFLAGS) $(ASAN)
-	./$(BIN)-asan
-endif
-
-valgrind:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(BIN)
-endif
+run_bench: gen bench
+	./gen_fixture large.txt 1000000 && time ./bench large.txt match
 
 clean:
-	rm -f $(BIN) $(BIN)-asan *.o
+	rm -f gen_fixture bench large.txt

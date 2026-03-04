@@ -1,28 +1,42 @@
-# Solution Workspace - Day 24
+# Day 24 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- `make test` - build and run scanner tests.
+- `make asan` - run tests with AddressSanitizer.
+- `make valgrind` - run tests under Valgrind.
+- `make clean` - remove generated binaries.
 
-From this directory:
+## Answers
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1. What does `fgets` do when it reads exactly `buf_size - 1` characters and there are more characters remaining on the line?  
+   *Hint: line continuation remains in stream for next read.*  
+   > TODO: write your answer here.
 
-From repository root:
+2. Why should matching output go to stdout but error messages go to stderr?  
+   *Hint: keep data stream clean for redirection/pipelines.*  
+   > TODO: write your answer here.
 
-```bash
-make day=24 test
-make day=24 asan
-make day=24 valgrind
-make day=24 clean
-```
+3. When does POSIX grep NOT print the filename prefix?  
+   *Hint: single input stream behavior.*  
+   > TODO: write your answer here.
 
-## Expected Minimum
+4. How do you detect EOF vs an I/O error using `fgets`?  
+   *Hint: inspect `feof()` and `ferror()` after NULL return.*  
+   > TODO: write your answer here.
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5. Why should you strip the trailing newline from a line before matching?  
+   *Hint: newline is input formatting, not semantic content in matcher rules.*  
+   > TODO: write your answer here.
+
+6. Why should line numbers increment per line read, not per match?  
+   *Hint: output line number must reflect original file position.*  
+   > TODO: write your answer here.
+
+7. Why design scanner API around `FILE*` rather than filenames directly?  
+   *Hint: same function can process stdin and opened files uniformly.*  
+   > TODO: write your answer here.
+
+8. What should scanner return on I/O error, and why?  
+   *Hint: caller needs explicit failure signal separate from 0 matches.*  
+   > TODO: write your answer here.
