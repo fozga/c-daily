@@ -1,6 +1,6 @@
-# 30-Day Interactive C Course (Linux)
+# 35-Day Interactive C Course (Linux)
 
-Repository scaffold for a 30-day C learning path on Linux. Each day has its own folder, learning materials, and a `solution/` workspace where you add your own code.
+Repository scaffold for a 5-week C learning path on Linux. Each day has its own folder, learning materials, and a `solution/` workspace where you add your own code.
 
 ## Requirements
 
@@ -41,14 +41,14 @@ The default setup in each day uses:
 - `-Wpedantic` - enforce strict standard compliance warnings.
 - `-Werror` - treat warnings as errors to keep code quality high.
 
-## 30-Day Plan (concise)
+## 35-Day Plan (concise)
 
 - Days 01-05: C basics (types, operators, control flow, functions)
 - Days 06-10: arrays, strings, pointers foundations
 - Days 11-15: memory management, structs, modular code
 - Days 16-20: file I/O, error handling, command-line programs
 - Days 21-25: advanced pointers, dynamic structures, debugging
-- Days 26-30: mini-projects, optimization basics, final review
+- Days 26-35: mini-projects, performance tuning, and advanced C systems topics (memory pools, atomics, FSMs, ring buffers, callbacks)
 
 ## Submission / Review Rules
 
@@ -109,16 +109,23 @@ dayNN: solve task and pass test/asan/valgrind
 | day28 | Project series I: regex-lite sets | character classes, escapes, parser extension | project | Extend matcher syntax with bracket character classes and escape handling while preserving old behavior. | Begins 3-part expansion on top of day27 optimized core. |
 | day29 | Project series II: parallel scan | C11 threads, work partitioning, synchronization | project | Add optional parallel file scanning using C11 threads with deterministic output and safe shared state. | Builds directly on day28 parser/matcher to scale throughput. |
 | day30 | Project series III: release polish | hardening, packaging, docs, final review | project | Finalize mini-grep with polish pass, stress tests, release notes, and a retrospective on design trade-offs. | Completes day28-29 expansion into a deliverable CLI tool. |
+| day31 | Static Memory Pools | fixed-size allocation, no-malloc | implement | Build a fixed-size block allocator to avoid heap fragmentation in constrained contexts. | Applies strict memory constraints to previous dynamic structures. |
+| day32 | C11 Threads and Atomics | <threads.h>, <stdatomic.h>, SPSC | implement | Implement a Single-Producer Single-Consumer queue using C11 atomics and threads. | Replaces C++ std::thread with C11 standard concurrency primitives. |
+| day33 | Finite State Machines | transition tables, state enum | implement | Implement a robust FSM for a simulated device initialization sequence. | Reuses function pointer knowledge for control flow. |
+| day34 | Circular Ring Buffers | modulo arithmetic, lock-free | implement | Build a fast, array-backed ring buffer for streaming bytes. | Extends array manipulation skills to infinite streams. |
+| day35 | Callbacks and Interrupts | event dispatch, sig_atomic_t | implement | Wire up an event dispatcher handling simulated asynchronous events. | Combines state machines, function pointers, and async signals. |
 
 ## Theme weeks
 
-Week 1 establishes C-specific foundations for someone coming from C++: strict toolchain discipline, undefined behavior awareness, pointer/array realities, C-string constraints, manual heap ownership, and explicit API contracts. The learner writes code daily but mostly learns to think in terms of memory and contracts instead of abstractions like RAII or exceptions.
+**Week 1** establishes C-specific foundations for someone coming from C++: strict toolchain discipline, undefined behavior awareness, pointer/array realities, C-string constraints, manual heap ownership, and explicit API contracts. The learner writes code daily but mostly learns to think in terms of memory and contracts instead of abstractions like RAII or exceptions.
 
-Week 2 shifts into practical C ecosystem work: standard-library usage patterns, preprocessor discipline, robust text/binary I/O, and data layout awareness. The week ends with modular design and integration, so the learner stops writing isolated snippets and starts building maintainable C components.
+**Week 2** shifts into practical C ecosystem work: standard-library usage patterns, preprocessor discipline, robust text/binary I/O, and data layout awareness. The week ends with modular design and integration, so the learner stops writing isolated snippets and starts building maintainable C components.
 
-Week 3 is about reliability under pressure: debugger-first diagnosis, sanitizer-guided bug fixing, leak analysis, and data-structure implementation with defensive practices. By the end of the week, the learner has both implementation muscle (list/hash-map/bitset) and a repeatable quality workflow.
+**Week 3** is about reliability under pressure: debugger-first diagnosis, sanitizer-guided bug fixing, leak analysis, and data-structure implementation with defensive practices. By the end of the week, the learner has both implementation muscle (list/hash-map/bitset) and a repeatable quality workflow.
 
-Week 4 turns skills into a coherent CLI project that grows incrementally from skeleton to hardened tool, then into a 3-part advanced extension series. The final days combine feature evolution, performance thinking, optional concurrency, and release-level polish to mirror real systems programming practice.
+**Week 4** turns skills into a coherent CLI project (mini-grep) that grows incrementally from a skeleton to a hardened tool. The week combines feature evolution, rigorous integration testing (shell scripts), and performance benchmarking to mirror real systems programming practice.
+
+**Week 5** dives into advanced systems and embedded-style patterns. The focus shifts to deterministic memory (static pools instead of `malloc`), standard C11 concurrency (threads and atomics), and asynchronous control flow (finite state machines, ring buffers, and callback-driven event loops).
 
 ## Learning outcomes
 
@@ -126,9 +133,9 @@ Week 4 turns skills into a coherent CLI project that grows incrementally from sk
 - Identify and avoid common C undefined-behavior traps around integer conversions and pointer misuse.
 - Design C APIs with explicit ownership, lifetime, and error-reporting contracts.
 - Implement safe text and binary I/O paths with validation and robust failure handling.
-- Use preprocessor macros responsibly without introducing hidden side effects.
 - Diagnose complex runtime defects with GDB, AddressSanitizer, and Valgrind.
-- Implement and test core data structures (linked list, hash map, bitset) in idiomatic C.
-- Write defensive, testable C modules with invariants and regression-oriented checks.
+- Implement and test core data structures (linked list, hash map, bitset, ring buffer) in idiomatic C.
+- Write defensive, testable C modules using invariants, test seams, and integration test scripts.
 - Develop, benchmark, and harden a non-trivial Linux CLI tool end-to-end.
-- Extend an existing C codebase with advanced features (syntax extensions, optional threading) while preserving correctness.
+- Apply systems-level patterns: fixed-size memory pools, table-driven state machines, and callback dispatchers.
+- Write concurrent C code using the C11 `<threads.h>` and `<stdatomic.h>` standards without relying on C++ `std::thread`.
