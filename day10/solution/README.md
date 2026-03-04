@@ -1,28 +1,42 @@
-# Solution Workspace - Day 10
+# Day 10 Solution Workspace
 
-Add your own C source files here (`*.c`, `*.h`).
+## Build and run
 
-## Local Commands
+- `make test` - build and run tests.
+- `make asan` - run tests with AddressSanitizer.
+- `make valgrind` - run tests under Valgrind.
+- `make clean` - remove generated binaries.
 
-From this directory:
+## Answers
 
-```bash
-make test
-make asan
-make valgrind
-make clean
-```
+1. Why should you always use `"rb"` and `"wb"` for binary files?  
+   *Hint: think about platform-specific text-mode transformations.*  
+   > TODO: write your answer here.
 
-From repository root:
+2. What does `fread` return if the file ends mid-record?  
+   *Hint: return value counts full items, not partial bytes.*  
+   > TODO: write your answer here.
 
-```bash
-make day=10 test
-make day=10 asan
-make day=10 valgrind
-make day=10 clean
-```
+3. Why is using `int` as a binary format field a portability bug?  
+   *Hint: size and representation of `int` vary by ABI/platform.*  
+   > TODO: write your answer here.
 
-## Expected Minimum
+4. What are "magic bytes" and why are they useful?  
+   *Hint: they identify expected file type before parsing payload.*  
+   > TODO: write your answer here.
 
-- At least one C source file (for example `main.c`)
-- Code compatible with C11 and strict warning flags
+5. How do you detect endianness at runtime in C?  
+   *Hint: inspect byte order of a known multi-byte integer value.*  
+   > TODO: write your answer here.
+
+6. Why should unknown binary format versions be rejected?  
+   *Hint: unsupported layouts can be misinterpreted silently.*  
+   > TODO: write your answer here.
+
+7. What is the difference between `feof` and `ferror` after short reads?  
+   *Hint: distinguish expected stream end from actual I/O failure.*  
+   > TODO: write your answer here.
+
+8. Why are fixed-width types (`uint32_t`, `int32_t`) critical in binary layouts?  
+   *Hint: deterministic on-disk field width is mandatory for compatibility.*  
+   > TODO: write your answer here.

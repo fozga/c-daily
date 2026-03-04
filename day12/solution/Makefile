@@ -1,43 +1,31 @@
-CC := gcc
+CC = gcc
+CFLAGS = -std=c11 -O0 -g -Wall -Wextra -Wpedantic -Werror
+ASAN_FLAGS = -fsanitize=address
+PADDED_FLAGS = -Wpadded
 
-STD := -std=c11
-WARN := -Wall -Wextra -Wpedantic -Werror
-DEBUG := -O0 -g
-ASAN := -fsanitize=address
+TEST_BIN = test_runner
+ASAN_BIN = test_runner_asan
+SRCS = layout.c tests.c
 
-CFLAGS := $(STD) $(WARN) $(DEBUG)
-LDFLAGS :=
+.PHONY: test asan valgrind layout_check clean
 
-SRCS := $(wildcard *.c)
-BIN := app
+test: $(TEST_BIN)
+	./$(TEST_BIN)
 
-.PHONY: all test asan valgrind clean
+$(TEST_BIN): $(SRCS) layout.h
+	$(CC) $(CFLAGS) $(SRCS) -o $(TEST_BIN)
 
-all: test
+asan: $(ASAN_BIN)
+	./$(ASAN_BIN)
 
-test:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	./$(BIN)
-endif
+$(ASAN_BIN): $(SRCS) layout.h
+	$(CC) $(CFLAGS) $(ASAN_FLAGS) $(SRCS) -o $(ASAN_BIN) $(ASAN_FLAGS)
 
-asan:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(ASAN) $(SRCS) -o $(BIN)-asan $(LDFLAGS) $(ASAN)
-	./$(BIN)-asan
-endif
+layout_check:
+	$(CC) $(CFLAGS) $(PADDED_FLAGS) $(SRCS) -o $(TEST_BIN)
 
-valgrind:
-ifeq ($(strip $(SRCS)),)
-	@echo "No .c files found. Add your solution first."
-else
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN) $(LDFLAGS)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(BIN)
-endif
+valgrind: $(TEST_BIN)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TEST_BIN)
 
 clean:
-	rm -f $(BIN) $(BIN)-asan *.o
+	rm -f $(TEST_BIN) $(ASAN_BIN) *.o

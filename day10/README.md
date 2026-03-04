@@ -1,34 +1,29 @@
-# Day 10
+# Day 10 - Binary I/O and layouts
 
-## Goal of the Day
+## Goal
+Implement binary record serialization/deserialization using `fread`/`fwrite`,
+fixed-width integer types, and explicit format validation.
 
-Practice core C skills for Day 10.
+## What you will build
+A binary file format for an array of records with a fixed header:
+magic bytes, version, and record count.
 
-## Task
+## Task (45-60 min)
+1. Review `binrec.h` and understand the header layout.
+2. Implement `binrec_write` and `binrec_read` in `binrec.c`.
+3. Use fixed-width integer types (`uint32_t`, `int32_t`) for deterministic layout.
+4. Run `make test` and verify write/read round-trip correctness.
+5. Run `make asan`.
 
-Implement today's exercise in `solution/`.
+## Acceptance criteria
+- `make test` passes with zero warnings.
+- `make asan` reports no sanitizer issues.
+- Bad magic bytes and version mismatches are detected and rejected.
+- Answers to all knowledge questions are completed in `solution/README.md`.
 
-Placeholder task description:
-- Read the materials in `materials/`.
-- Implement a small C program according to the day prompt.
-- Make sure your program compiles with strict flags and runs correctly.
+## Knowledge check
+There are 8 knowledge-check questions in `solution/README.md`.
 
-## Acceptance Criteria
-
-- Code is inside `solution/`.
-- `make test` passes in `solution/`.
-- `make asan` passes without AddressSanitizer errors.
-- `make valgrind` shows no memory leaks.
-- Code builds with `-std=c11` and strict warnings.
-
-## What to Submit
-
-- Source files (`*.c`, `*.h`) in `solution/`.
-- Any test helpers needed for reproducible checks.
-
-## Check Questions
-
-1. What problem does your program solve today?
-2. Which edge cases did you test?
-3. Did ASan and Valgrind both pass? What did they help you catch?
-4. Which warning flags helped you improve code quality?
+## Stretch goals
+Add helpers that normalize integer fields to little-endian on write and convert
+back on read for a portable on-disk format.
